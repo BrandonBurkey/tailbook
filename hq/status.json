@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-19T20:55:00Z",
+  "updatedAt": "2026-10-19T21:00:43.170Z",
   "updatedBy": "lead",
   "headline": "Research, the competitor check and the validation kit are done, and the web checker is built and tested. The iOS app is being built now. This week is your setup week, so the forum posts can start on Mon Oct 26.",
   "phases": [
@@ -110,37 +110,37 @@
       "id": "design",
       "name": "UI/UX",
       "role": "Design system and visuals",
-      "status": "working",
+      "status": "done",
       "folders": [
         "design"
       ],
-      "task": "Building the design system, the App Store screenshots and the landing page polish.",
-      "next": "Hand off screenshots to Marketing",
-      "updatedAt": "2026-10-19T20:35:00Z"
+      "task": "Design system, 6 App Store screenshots, landing polish. Next: review iOS screens once built.",
+      "next": "Review the iOS screens and match App Store screenshots to the real app",
+      "updatedAt": "2026-10-19T21:00:43.170Z"
     },
     {
       "id": "marketing",
       "name": "Marketing",
       "role": "Launch content",
-      "status": "working",
+      "status": "done",
       "folders": [
         "marketing"
       ],
-      "task": "Writing the launch content kit.",
-      "next": "Content calendar for Oct 26 onward",
-      "updatedAt": "2026-10-19T20:35:00Z"
+      "task": "Launch kit done: brand voice, 62-post calendar, 15 video scripts, ads plan, partners, launch plan.",
+      "next": "Start the content calendar on Oct 26",
+      "updatedAt": "2026-10-19T21:00:43.170Z"
     },
     {
       "id": "sales",
       "name": "Sales",
       "role": "Partners and B2B",
-      "status": "working",
+      "status": "done",
       "folders": [
         "sales"
       ],
-      "task": "Writing the partner and B2B kit (type clubs, flight schools, shops).",
-      "next": "Partner one-pager and outreach list",
-      "updatedAt": "2026-10-19T20:35:00Z"
+      "task": "Partner kit done: 60 target orgs, pitch scripts, objection handling, pricing, CRM.",
+      "next": "Founder starts partner outreach (COPA, ABS first)",
+      "updatedAt": "2026-10-19T21:00:43.170Z"
     },
     {
       "id": "ios",
