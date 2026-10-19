@@ -422,11 +422,13 @@
         <span class="pill ${esc(verdict)}">${VERDICT[verdict]}</span>
       </div>
       <div class="exp-main">
+        <div class="label">${esc(main.metric)}${main.proxy ? ' · proxy' : ''}</div>
         <div class="exp-figure">
-          <div class="val ${v == null ? 'empty' : ''}">${v == null ? 'No data' : esc(fmtVal(v, main.percent))}<small>${esc(main.metric)}${main.proxy ? ' (proxy)' : ''}</small></div>
-          <div class="goal">Pass <b>${esc(niceThreshold(main.passText))}</b>${main.failText && !/^n\/a/i.test(main.failText) ? `<br>Fail ${esc(niceThreshold(main.failText))}` : ''}</div>
+          <div class="val ${v == null ? 'empty' : ''}">${v == null ? '—' : esc(fmtVal(v, main.percent))}${v == null ? '<small>no data yet</small>' : ''}</div>
+          ${main.pass ? `<div class="goal">Target <b>${esc(main.pass.op === '>=' ? '≥' : main.pass.op)}${esc(fmtVal(main.pass.value, main.pass.percent))}</b></div>` : ''}
         </div>
         ${meter(main)}
+        <div class="exp-rule"><span><b>Pass</b> ${esc(niceThreshold(main.passText))}</span>${main.failText && !/^n\/a/i.test(main.failText) ? `<span><b>Fail</b> ${esc(niceThreshold(main.failText))}</span>` : ''}</div>
       </div>
       ${others.length ? `<div class="sub-metrics">${others.map((m) => `<div class="sub-metric">
         <div class="nm">${esc(m.metric)}${m.proxy ? '<span class="tag">proxy</span>' : ''}${m.postBuild ? '<span class="tag">after launch</span>' : ''}<span class="tg">Pass ${esc(niceThreshold(m.passText))}</span></div>
@@ -470,7 +472,7 @@
     const draft = (row, col, orig) => (state.drafts[`${row}:${col}`] ?? orig ?? '');
     const hint = (w, met) => {
       const t = String(w.target || '').trim();
-      if (/^\d/.test(t)) return `Goal by end of week: ${t}${met.percent ? '%' : ''}`;
+      if (/^\d/.test(t)) return `Target so far: ${t}${met.percent ? '%' : ''}`;
       if (!t || /^track$/i.test(t)) return 'Just track it';
       return t.charAt(0).toUpperCase() + t.slice(1);
     };

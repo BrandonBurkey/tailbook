@@ -88,6 +88,14 @@ final class StoreService {
         await refreshEntitlements()
     }
 
+    /// SubscriptionStoreView's completion callback. Returns true once Pro is active.
+    func handleCompletion(_ result: Result<Product.PurchaseResult, Error>) async -> Bool {
+        if case .success(let purchaseResult) = result {
+            await handle(purchaseResult: purchaseResult)
+        }
+        return isPro
+    }
+
     /// For the App Intent, which runs without the UI's StoreService instance.
     nonisolated static func hasActiveProEntitlement() async -> Bool {
         #if DEBUG

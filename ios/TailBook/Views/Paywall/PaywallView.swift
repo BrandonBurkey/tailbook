@@ -17,11 +17,9 @@ struct PaywallView: View {
         .subscriptionStorePolicyDestination(url: AppConfig.termsURL, for: .termsOfService)
         .subscriptionStorePolicyDestination(url: AppConfig.privacyURL, for: .privacyPolicy)
         .onInAppPurchaseCompletion { _, result in
-            if case .success(let purchaseResult) = result {
-                await store.handle(purchaseResult: purchaseResult)
-                if store.isPro {
-                    await MainActor.run { dismiss() }
-                }
+            let unlocked = await store.handleCompletion(result)
+            if unlocked {
+                await MainActor.run { dismiss() }
             }
         }
         .tint(Color.accentColor)

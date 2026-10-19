@@ -426,11 +426,14 @@ h2.section { font: 650 18px/1.3 var(--font-display); letter-spacing: -0.015em; m
 .exp-title { font: 650 16.5px/1.3 var(--font-display); letter-spacing: -0.01em; }
 .exp-blurb { font-size: 13.5px; color: var(--text-2); margin-top: 3px; line-height: 1.45; }
 .exp-main { margin-top: 22px; }
+.exp-main .label { margin-bottom: 6px; }
+.exp-rule { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 4px; font-size: 12.5px; color: var(--text-2); line-height: 1.45; }
+.exp-rule b { font-weight: 650; color: var(--text); margin-right: 2px; }
 .exp-figure { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .exp-figure .val { font: 700 34px/1 var(--font-display); letter-spacing: -0.035em; font-variant-numeric: tabular-nums; }
 .exp-figure .val.empty { color: var(--text-3); font-weight: 600; }
 .exp-figure .val small { font-size: 14px; font-weight: 600; color: var(--text-3); letter-spacing: 0; margin-left: 6px; }
-.exp-figure .goal { font-size: 13px; color: var(--text-2); text-align: right; }
+.exp-figure .goal { font-size: 13px; color: var(--text-2); text-align: right; white-space: nowrap; }
 .exp-figure .goal b { color: var(--text); font-weight: 650; }
 .meter { position: relative; margin-top: 14px; height: 10px; border-radius: 999px; display: flex; overflow: hidden; background: var(--surface-3); }
 .meter .band { height: 100%; }
