@@ -68,14 +68,22 @@ struct PaywallMarketingView: View {
                 .padding(.vertical, 6)
                 .background(.thinMaterial, in: Capsule())
 
-            Text("New subscribers get a 14-day free trial on the annual plan. Founding Owners: tap Redeem Code.")
+            Text("The annual plan includes a 14-day free trial for eligible new subscribers. Founding Owners: tap Redeem Code.")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 
+            Text("Payment is charged to your Apple Account. Subscriptions renew automatically at the price shown until canceled. Cancel anytime in Settings › Apple Account › Subscriptions, at least 24 hours before the trial or current period ends.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+
             HStack(spacing: 16) {
                 Link("Terms of Use", destination: AppConfig.termsURL)
+                    .frame(minHeight: 44)
                 Link("Privacy Policy", destination: AppConfig.privacyURL)
+                    .frame(minHeight: 44)
             }
             .font(.footnote)
 

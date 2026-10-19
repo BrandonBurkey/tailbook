@@ -210,9 +210,10 @@ enum PDFExporter {
 
     static func statusColor(_ status: ItemStatus) -> UIColor {
         switch status {
-        case .overdue: return UIColor(red: 0.75, green: 0.10, blue: 0.10, alpha: 1)
-        case .dueSoon: return UIColor(red: 0.70, green: 0.45, blue: 0.00, alpha: 1)
-        case .ok: return UIColor(red: 0.10, green: 0.48, blue: 0.22, alpha: 1)
+        // Light-mode text tokens (design/tokens.json), AA on white at 9 pt.
+        case .overdue: return UIColor(red: 0.639, green: 0.078, blue: 0.165, alpha: 1)
+        case .dueSoon: return UIColor(red: 0.541, green: 0.325, blue: 0.000, alpha: 1)
+        case .ok: return UIColor(red: 0.043, green: 0.416, blue: 0.322, alpha: 1)
         case .notApplicable, .unknown: return PDFPageWriter.gray
         }
     }

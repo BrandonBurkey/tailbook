@@ -31,10 +31,15 @@ struct OnboardingView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 if step != .welcome {
-                    ProgressView(value: Double(step.rawValue), total: Double(Step.allCases.count - 1))
-                        .padding(.horizontal)
-                        .padding(.top, 4)
-                        .accessibilityLabel("Setup progress")
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Step \(step.rawValue) of \(Step.allCases.count - 1)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        ProgressView(value: Double(step.rawValue), total: Double(Step.allCases.count - 1))
+                            .accessibilityHidden(true)
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, 4)
                 }
                 stepContent
             }
@@ -56,6 +61,7 @@ struct OnboardingView: View {
                     } label: {
                         Text(primaryButtonTitle)
                             .font(.headline)
+                            .foregroundStyle(Theme.onAccent)
                             .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.borderedProminent)
@@ -189,6 +195,7 @@ struct WelcomeStep: View {
                 Button(action: onAccept) {
                     Text("I understand — set up my aircraft")
                         .font(.headline)
+                        .foregroundStyle(Theme.onAccent)
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)

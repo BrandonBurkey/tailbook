@@ -100,41 +100,72 @@ h1 em{font-style:normal;color:#7DBBFF}
 .note{display:flex;gap:10px;font-size:13.5px;line-height:1.4;color:var(--ink2);padding:12px 14px;background:var(--accentSoft);border-radius:12px}
 .note .ic{width:18px;height:18px;color:var(--accent);flex:none;margin-top:1px}
 </style></head>
-<body><div class="stage"><div class="copy"><div class="eyebrow"><i></i>Tach log</div><h1>Log a flight.<br><em>The board updates.</em></h1><p class="sub">Hours-based items turn into dates at your pace, so oil changes and ADs never sneak up.</p></div><div class="phone-wrap"><div class="phone"><div class="screen dark"><div class="island"></div><div class="sbar"><span>9:41</span><span class="r">
+<body><div class="stage"><div class="copy"><div class="eyebrow"><i></i>Tach log</div><h1>Log a flight.<br><em>The board updates.</em></h1><p class="sub">Type the new tach or tap +1.0. Oil changes and hours-based ADs re-project to dates at your pace.</p></div><div class="phone-wrap"><div class="phone"><div class="screen ios dark"><div class="island"></div><div class="sbar"><span>9:41</span><span class="r">
   <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
   <svg viewBox="0 0 16 12"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0zM3.4 6.8a6.5 6.5 0 0 1 9.2 0l-1.4 1.4a4.5 4.5 0 0 0-6.4 0zM1 4.4a9.9 9.9 0 0 1 14 0l-1.4 1.4a7.9 7.9 0 0 0-11.2 0z" fill="currentColor"/></svg>
   <svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="23" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/><path d="M25 4v4a2 2 0 0 0 0-4z" fill="currentColor" opacity=".5"/></svg>
 </span></div><style>
-    .dim{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:17}
-    .sheet{position:absolute;left:0;right:0;bottom:0;top:262px;background:var(--surface);border-radius:24px 24px 0 0;z-index:18;padding:8px 16px 0;box-shadow:0 -10px 40px rgba(0,0,0,.4)}
-    .grab{width:38px;height:5px;border-radius:3px;background:var(--line2);margin:0 auto 10px}
-    .tach{display:flex;align-items:baseline;justify-content:center;gap:10px;margin-top:6px}
-    .tach b{font-family:'Inter Display';font-size:64px;font-weight:700;letter-spacing:-.02em;font-feature-settings:"tnum"}
-    .caret{display:inline-block;width:3px;height:56px;background:var(--accent);margin-left:2px;transform:translateY(6px);border-radius:2px}
-    .field{background:var(--surface2);border:1.5px solid var(--accent);border-radius:14px;padding:12px 16px 14px;margin-top:12px}
-    .pv{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface2);border-radius:12px;margin-top:10px;border:1px solid var(--line)}
-    .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 -10px;padding:8px 6px 40px;background:var(--canvas);position:absolute;left:10px;right:10px;bottom:0}
-    .keys span{height:47px;border-radius:8px;background:var(--surface2);display:grid;place-items:center;font-size:25px;font-weight:400;box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.ios.light{--i-bg:#F2F2F7;--i-cell:#FFFFFF;--i-sep:#C6C6C8;--i-lab:#000000;--i-lab2:#8A8A8E;--i-lab3:#C4C4C7;--i-fill:rgba(120,120,128,.12);--i-bar:#F7F7F8;--i-barLine:rgba(0,0,0,.18);--i-tint:#1F5FD1;--i-onTint:#FFFFFF;--i-red:#A3142A;--i-yel:#8A5300;--i-grn:#0B6A52;} .ios.dark{--i-bg:#000000;--i-cell:#1C1C1E;--i-sep:#38383A;--i-lab:#FFFFFF;--i-lab2:#98989F;--i-lab3:#5A5A5E;--i-fill:rgba(118,118,128,.24);--i-bar:#161618;--i-barLine:rgba(255,255,255,.15);--i-tint:#5AA9FF;--i-onTint:#06121F;--i-red:#FF8A80;--i-yel:#FFC266;--i-grn:#6BE3BC;}
+.ios{background:var(--i-bg);color:var(--i-lab)}
+.ios .app{font-family:"Inter",system-ui,sans-serif;letter-spacing:-.012em}
+.ios .sbar{color:var(--i-lab)} .ios .homebar{background:var(--i-lab)}
+.ios .st-overdue{color:var(--i-red)} .ios .st-due_soon{color:var(--i-yel)} .ios .st-ok{color:var(--i-grn)}
+.ios .st-unknown,.ios .st-not_applicable{color:var(--i-lab2)}
+.inav{display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 16px;position:relative}
+.inav .l,.inav .r{display:flex;align-items:center;gap:2px;color:var(--i-tint);font-size:17px;min-width:70px}
+.inav .r{justify-content:flex-end;font-weight:600}
+.inav .c{position:absolute;left:90px;right:90px;text-align:center;font-weight:600;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inav .c small{display:block;font-size:11px;font-weight:400;color:var(--i-lab2);letter-spacing:0}
+.inav .ic{width:24px;height:24px}
+.scroll{position:absolute;left:0;right:0;top:100px;bottom:0;overflow:hidden}
+.sec{margin:0 16px}
+.sh{font-size:13px;color:var(--i-lab2);text-transform:uppercase;padding:18px 16px 7px;letter-spacing:0}
+.sf{font-size:13px;line-height:1.35;color:var(--i-lab2);padding:7px 16px 4px;letter-spacing:-.005em}
+.grp{background:var(--i-cell);border-radius:10px;overflow:hidden}
+.cell{display:flex;align-items:center;gap:12px;min-height:44px;padding:11px 16px;position:relative;font-size:17px}
+.cell+.cell::before{content:"";position:absolute;top:0;left:16px;right:0;height:.6px;background:var(--i-sep)}
+.cell.ind+.cell::before,.cell+.cell.ind::before{left:54px}
+.cell .grow{flex:1;min-width:0}
+.cell .k{flex:1} .cell .v{color:var(--i-lab2);font-feature-settings:"tnum"}
+.chev{width:14px;height:14px;color:var(--i-lab3);flex:none}
+.tl{color:var(--i-tint)}
+.tl .ic{width:22px;height:22px}
+.lab2{color:var(--i-lab2)}
+.pill{background:var(--i-fill);border-radius:7px;padding:6px 11px;font-size:17px;font-feature-settings:"tnum";white-space:nowrap}
+.bbtn{background:var(--i-fill);color:var(--i-tint);border-radius:8px;padding:6px 12px;font-size:15px;font-weight:500;white-space:nowrap}
+.pbtn{height:50px;border-radius:12px;background:var(--i-tint);color:var(--i-onTint);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:17px}
+.pbtn .ic{width:21px;height:21px}
+.botbar{position:absolute;left:0;right:0;padding:8px 16px;background:var(--i-bar);border-top:.6px solid var(--i-barLine);z-index:14;backdrop-filter:blur(20px)}
+.itabs{position:absolute;left:0;right:0;bottom:0;height:83px;display:flex;justify-content:space-around;padding:7px 4px 0;background:var(--i-bar);border-top:.6px solid var(--i-barLine);z-index:15}
+.itab{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:500;color:var(--i-lab2);width:80px;letter-spacing:0}
+.itab .ic{width:26px;height:26px}
+.itab.on{color:var(--i-tint)}
+.toggle{width:51px;height:31px;border-radius:16px;background:#34C759;position:relative;flex:none}
+.toggle::after{content:"";position:absolute;right:2px;top:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.seg{display:flex;background:var(--i-fill);border-radius:9px;padding:2px;font-size:14px;font-weight:500;width:100%}
+.seg span{flex:1;text-align:center;padding:6px 0;border-radius:7px}
+.seg span.on{background:var(--i-cell);box-shadow:0 2px 6px rgba(0,0,0,.14);font-weight:600}
+.dark .seg span.on{background:#636366}
+.updown{display:inline-flex;align-items:center;gap:4px;color:var(--i-lab2)}
+.updown svg{width:11px;height:15px}
+</style><style>.dimtop{position:absolute;left:0;right:0;top:0;height:120px;background:#000}
+    .behind{position:absolute;left:14px;right:14px;top:48px;height:60px;border-radius:12px 12px 0 0;background:#2C2C2E}
+    .esheet{position:absolute;left:0;right:0;top:60px;bottom:0;border-radius:12px 12px 0 0;background:var(--i-bg);overflow:hidden}
+    .keys{position:absolute;left:0;right:0;bottom:0;height:300px;background:#2B2B2D;padding:8px 6px 0;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:47px;gap:7px}
+    .keys span{border-radius:6px;background:#6B6B6F;display:grid;place-items:center;font-size:25px;color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.4)}
     .keys span.f{background:transparent;box-shadow:none}
-  </style><div class="app">
-    <div class="nav"><div><div class="t">N731TB <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></div><div class="s">Beechcraft A36 · IFR</div></div><div class="btns"><div class="cbtn"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></div></div></div>
-    <div class="pad"><div class="card"><div class="row "><span class="g st-overdue"><svg viewBox="0 0 24 24"><path d="M7.6 1.8h8.8l5.8 5.8v8.8l-5.8 5.8H7.6l-5.8-5.8V7.6z" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linejoin="round"/><path d="M8.6 8.6l6.8 6.8M15.4 8.6l-6.8 6.8" stroke="var(--knock)" stroke-width="2.3" stroke-linecap="round"/></svg></span>
-  <div class="lb"><div class="nm">ELT battery</div><div class="ct">14 CFR §91.207(c)</div><div class="dt">Expired after Sep 30, 2026</div></div>
-  <div class="vb"><div class="vl st-overdue">19</div><div class="un">days over</div><span class="tag st-overdue">Overdue</span></div></div><div class="row "><span class="g st-due_soon"><svg viewBox="0 0 24 24"><path d="M10.3 3.2a2 2 0 0 1 3.4 0l8.6 15.1a2 2 0 0 1-1.7 3H3.4a2 2 0 0 1-1.7-3z" fill="currentColor"/><path d="M12 8.6v5.6" stroke="var(--knock)" stroke-width="2.3" stroke-linecap="round"/><circle cx="12" cy="17.6" r="1.35" fill="var(--knock)"/></svg></span>
-  <div class="lb"><div class="nm">Transponder</div><div class="ct">14 CFR §91.413</div><div class="dt">Current through Oct 31, 2026</div></div>
-  <div class="vb"><div class="vl st-due_soon">12</div><div class="un">days left</div><span class="tag st-due_soon">Due soon</span></div></div><div class="row "><span class="g st-due_soon"><svg viewBox="0 0 24 24"><path d="M10.3 3.2a2 2 0 0 1 3.4 0l8.6 15.1a2 2 0 0 1-1.7 3H3.4a2 2 0 0 1-1.7-3z" fill="currentColor"/><path d="M12 8.6v5.6" stroke="var(--knock)" stroke-width="2.3" stroke-linecap="round"/><circle cx="12" cy="17.6" r="1.35" fill="var(--knock)"/></svg></span>
-  <div class="lb"><div class="nm">VOR check</div><div class="ct">14 CFR §91.171</div><div class="dt">Current through Oct 31, 2026</div></div>
-  <div class="vb"><div class="vl st-due_soon">12</div><div class="un">days left</div><span class="tag st-due_soon">Due soon</span></div></div><div class="row "><span class="g st-due_soon"><svg viewBox="0 0 24 24"><path d="M10.3 3.2a2 2 0 0 1 3.4 0l8.6 15.1a2 2 0 0 1-1.7 3H3.4a2 2 0 0 1-1.7-3z" fill="currentColor"/><path d="M12 8.6v5.6" stroke="var(--knock)" stroke-width="2.3" stroke-linecap="round"/><circle cx="12" cy="17.6" r="1.35" fill="var(--knock)"/></svg></span>
-  <div class="lb"><div class="nm">Oil change</div><div class="ct">Engine manufacturer</div><div class="dt">About Nov 24 at your pace</div></div>
-  <div class="vb"><div class="vl st-due_soon">9.6</div><div class="un">hrs left · proj.</div><span class="tag st-due_soon">Due soon</span></div></div></div></div>
-    <div class="dim"></div>
-    <div class="sheet"><div class="grab"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center"><span style="color:var(--accent);font-size:17px">Cancel</span><span style="font-weight:650;font-size:17px">Log flight</span><span style="width:52px"></span></div>
-      <div class="field"><div style="display:flex;justify-content:space-between"><span class="ov">Tach now</span><span class="ov">Last: 1,250.4</span></div>
-        <div class="tach"><b>1,252.0</b><span class="caret"></span></div>
-        <div style="display:flex;justify-content:center;gap:8px;font-size:13.5px;color:var(--ink2);margin-top:2px"><span>Today, Oct 19</span><span style="color:var(--ink3)">·</span><span>Pilot: Me</span><span style="color:var(--ink3)">·</span><span style="color:var(--accent)">Add Hobbs</span></div></div>
-      <div class="pv"><span class="g st-due_soon"><svg viewBox="0 0 24 24"><path d="M10.3 3.2a2 2 0 0 1 3.4 0l8.6 15.1a2 2 0 0 1-1.7 3H3.4a2 2 0 0 1-1.7-3z" fill="currentColor"/><path d="M12 8.6v5.6" stroke="var(--knock)" stroke-width="2.3" stroke-linecap="round"/><circle cx="12" cy="17.6" r="1.35" fill="var(--knock)"/></svg></span><div style="flex:1"><div style="font-weight:600;font-size:15.5px">Oil change</div><div style="font-size:13px;color:var(--ink2);margin-top:1px">9.6 → <b style="color:var(--dueSoon)">8.0 hrs left</b> · about Nov 18</div></div></div>
-      <div class="btn" style="margin-top:14px">Log 1.6 hrs</div>
-      <div class="keys"><span class="">1</span><span class="">2</span><span class="">3</span><span class="">4</span><span class="">5</span><span class="">6</span><span class="">7</span><span class="">8</span><span class="">9</span><span class="f">.</span><span class="">0</span><span class="f">⌫</span></div>
-    </div>
-  </div><div class="homebar"></div></div></div></div></div></body></html>
+    .caret{display:inline-block;width:3px;height:36px;background:var(--i-tint);margin-left:2px;vertical-align:-5px;border-radius:2px}</style>
+  <div class="dimtop"></div><div class="behind"></div>
+  <div class="app" style="padding-top:0"><div class="esheet">
+    <div class="inav" style="margin-top:6px"><span class="l">Cancel</span><span class="c">Log flight</span><span class="r">Save</span></div>
+    <div class="sh" style="padding-top:8px">New tach reading · N731TB</div>
+    <div class="sec"><div class="grp">
+      <div class="cell" style="justify-content:center;padding:14px 16px"><span style="font-size:34px;font-weight:600;font-feature-settings:'tnum';letter-spacing:-.01em">1251.6</span><span class="caret"></span></div>
+      <div class="cell" style="gap:8px"><span class="bbtn" style="font-feature-settings:'tnum'">+0.5</span><span class="bbtn" style="font-feature-settings:'tnum'">+1.0</span><span class="bbtn" style="font-feature-settings:'tnum'">+1.5</span><span class="bbtn" style="font-feature-settings:'tnum'">+2.0</span><span class="bbtn" style="font-feature-settings:'tnum'">+3.0</span></div>
+      <div class="cell" style="font-size:15px;font-feature-settings:'tnum'"><span class="k">Was 1250.4</span><span class="lab2">+1.2 hrs</span></div></div></div>
+    <div class="sec" style="margin-top:22px"><div class="grp">
+      <div class="cell"><span class="k">Hobbs</span><span style="color:var(--i-lab3)">Optional</span></div>
+      <div class="cell"><span class="k">Date</span><span class="pill">Oct 19, 2026</span><span class="pill">9:41 AM</span></div>
+      <div class="cell"><span style="color:var(--i-lab3)">Note (optional)</span></div></div></div>
+    <div class="keys"><span class="">1</span><span class="">2</span><span class="">3</span><span class="">4</span><span class="">5</span><span class="">6</span><span class="">7</span><span class="">8</span><span class="">9</span><span class="f">.</span><span class="">0</span><span class="f">⌫</span></div>
+  </div></div><div class="homebar"></div></div></div></div></div></body></html>

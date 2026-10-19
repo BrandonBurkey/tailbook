@@ -19,6 +19,7 @@ struct SettingsView: View {
     @State private var showManageSubscriptions = false
     @State private var showRedeemCode = false
     @State private var isRestoring = false
+    @State private var restoreMessage: String? = nil
     @State private var aircraftToDelete: Aircraft? = nil
     @State private var notificationStatus: UNAuthorizationStatus = .notDetermined
 
@@ -50,7 +51,7 @@ struct SettingsView: View {
         .offerCodeRedemption(isPresented: $showRedeemCode) { _ in
             Task { await store.refreshEntitlements() }
         }
-        .confirmationDialog("Delete this aircraft and all its items, tach log and squawks?",
+        .confirmationDialog("Delete \(aircraftToDelete?.displayTail ?? "this aircraft") and all its items, tach log and squawks?",
                             isPresented: deleteDialogBinding, titleVisibility: .visible) {
             Button("Delete", role: .destructive) {
                 if let plane = aircraftToDelete {
@@ -91,6 +92,7 @@ struct SettingsView: View {
                         }
                     }
                 }
+                .accessibilityAddTraits(plane.uuid == aircraft.uuid ? .isSelected : [])
                 .swipeActions(edge: .trailing) {
                     Button(role: .destructive) {
                         aircraftToDelete = plane
@@ -144,8 +146,10 @@ struct SettingsView: View {
             Button {
                 Task {
                     isRestoring = true
+                    restoreMessage = nil
                     await store.restore()
                     isRestoring = false
+                    restoreMessage = store.isPro ? "Restored. TailBook Pro is active." : "Nothing to restore for this Apple Account."
                 }
             } label: {
                 HStack {
@@ -157,6 +161,11 @@ struct SettingsView: View {
                 }
             }
             .disabled(isRestoring)
+            if let restoreMessage = restoreMessage {
+                Text(restoreMessage)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             Button {
                 showRedeemCode = true
             } label: {

@@ -43,6 +43,7 @@ struct ItemDetailView: View {
                     }
                 }
                 .padding(.vertical, 4)
+                .accessibilityElement(children: .combine)
                 Text(item.message)
                     .font(.callout)
             }

@@ -28,6 +28,7 @@ struct OptionalDateField: View {
                 }
                 .font(.caption)
                 .buttonStyle(.borderless)
+                .frame(minHeight: 44)
             } else {
                 Text("Don't know yet — shows as Needs info until you add it.")
                     .font(.caption)

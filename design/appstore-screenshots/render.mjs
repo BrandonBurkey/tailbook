@@ -3,8 +3,10 @@
  * App Store screenshot mockups for TailBook (6.9" display, 1290×2796 portrait).
  *   node design/appstore-screenshots/render.mjs
  * Writes the HTML source to design/appstore-screenshots/src/ and PNGs next to this file.
- * The UI is a hand-built HTML/CSS reconstruction of the SwiftUI screens, using the colors in
- * design/tokens.json and the anatomy in design/DESIGN-SYSTEM.md. Board numbers come from the
+ * The UI is a hand-built HTML/CSS reconstruction of the SwiftUI MVP as it is actually built
+ * (ios/TailBook/Views: system grouped lists, the five tabs in RootView, the real strings), with the
+ * status/accent colors from design/tokens.json (= Assets.xcassets). Show only features the app has.
+ * Replace with real simulator captures of the sample aircraft before submission. Board numbers come from the
  * real rules engine (engine/tailbook-engine.js) evaluated on 2026-10-19 for the sample aircraft.
  * Uses the globally installed Playwright + preinstalled Chromium (no `playwright install`).
  */
@@ -211,253 +213,307 @@ const phone = (mode, inner) => `<div class="phone-wrap"><div class="phone"><div 
 const page = (title, { eyebrow, h1, sub }, phoneHtml) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${title}</title><style>${CSS}</style></head>
 <body><div class="stage"><div class="copy"><div class="eyebrow"><i></i>${eyebrow}</div><h1>${h1}</h1><p class="sub">${sub}</p></div>${phoneHtml}</div></body></html>`;
 
-const rowHtml = (r) => `<div class="row ${r.status === 'not_applicable' ? 'na' : ''}">${glyph(r.status)}
-  <div class="lb"><div class="nm">${r.name}</div><div class="ct">${r.cite}</div>${r.detail ? `<div class="dt">${r.detail}</div>` : ''}</div>
-  <div class="vb">${r.value ? `<div class="vl st-${r.status}">${r.value}</div><div class="un">${r.unit}${r.projected ? ' · proj.' : ''}</div>` : ''}<span class="tag st-${r.status}">${TAG[r.status]}</span></div></div>`;
-
-const tabbar = (on) => `<div class="tabbar">${[['board', 'Board'], ['shield', 'ADs'], ['clip', 'Squawks'], ['vault', 'Logbooks'], ['doc', 'Reports']]
-  .map(([ic, l]) => `<div class="tab ${l === on ? 'on' : ''}">${icon(ic)}<span>${l}</span></div>`).join('')}</div>`;
-
-const ANSWER = { current: 'Yes', limited: 'Not all', overdue: 'No', incomplete: "Can't tell yet" };
-const SUM_GLYPH = { current: 'ok', limited: 'due_soon', overdue: 'overdue', incomplete: 'unknown' };
-const SUM_TEXT = { current: 'var(--current)', limited: 'var(--dueSoon)', overdue: 'var(--overdue)', incomplete: 'var(--ink2)' };
 const SHORT_DISC = 'TailBook organizes the dates you enter. Your A&amp;P/IA and the pilot in command determine airworthiness.';
 
-function heroCard(s = S) {
-  return `<div class="card hero">
-    <div class="hero-main">${glyph(SUM_GLYPH[s.status])}
-      <div><div class="ov">All items current?</div><div class="answer" style="color:${SUM_TEXT[s.status]}">${ANSWER[s.status]}</div>
-      <div class="headline">${s.headline.replace(/(\d) /g, '$1&nbsp;')}</div></div></div>
-    <div class="strip"><div><div class="ov">Next due</div><div class="v">${s.nextDue.name} in ${s.nextDue.daysRemaining} days</div></div>
-      <div class="counts"><span>${glyph('overdue')}${s.counts.overdue}</span><span>${glyph('due_soon')}${s.counts.due_soon}</span><span>${glyph('ok')}${s.counts.ok}</span></div></div>
-    <div class="disc">${SHORT_DISC}</div></div>`;
+// ------------------------------------------------------------------ real-app UI (mirrors ios/TailBook/Views)
+// These screens copy what the SwiftUI MVP actually renders: system insetGrouped lists, the five tabs in
+// RootView.MainTabView (Status · ADs & Items · Squawks · Reports · Settings), the strings in
+// Models/Formatting.swift, and the colors in Assets.xcassets (= tokens.json text colors). Nothing here may
+// show a feature the app doesn't have (no logbook scans, no co-owners, no widgets).
+const IOS = {
+  light: { bg: '#F2F2F7', cell: '#FFFFFF', sep: '#C6C6C8', lab: '#000000', lab2: '#8A8A8E', lab3: '#C4C4C7', fill: 'rgba(120,120,128,.12)', bar: '#F7F7F8', barLine: 'rgba(0,0,0,.18)',
+    tint: tokens.light.accent, onTint: tokens.light.onAccent, red: tokens.light.overdue, yel: tokens.light.dueSoon, grn: tokens.light.current },
+  dark: { bg: '#000000', cell: '#1C1C1E', sep: '#38383A', lab: '#FFFFFF', lab2: '#98989F', lab3: '#5A5A5E', fill: 'rgba(118,118,128,.24)', bar: '#161618', barLine: 'rgba(255,255,255,.15)',
+    tint: tokens.dark.accent, onTint: tokens.dark.onAccent, red: tokens.dark.overdue, yel: tokens.dark.dueSoon, grn: tokens.dark.current },
+};
+const iosVars = (m) => Object.entries(IOS[m]).map(([k, v]) => `--i-${k}:${v};`).join('');
+const ICSS = `<style>
+.ios.light{${iosVars('light')}} .ios.dark{${iosVars('dark')}}
+.ios{background:var(--i-bg);color:var(--i-lab)}
+.ios .app{font-family:"Inter",system-ui,sans-serif;letter-spacing:-.012em}
+.ios .sbar{color:var(--i-lab)} .ios .homebar{background:var(--i-lab)}
+.ios .st-overdue{color:var(--i-red)} .ios .st-due_soon{color:var(--i-yel)} .ios .st-ok{color:var(--i-grn)}
+.ios .st-unknown,.ios .st-not_applicable{color:var(--i-lab2)}
+.inav{display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 16px;position:relative}
+.inav .l,.inav .r{display:flex;align-items:center;gap:2px;color:var(--i-tint);font-size:17px;min-width:70px}
+.inav .r{justify-content:flex-end;font-weight:600}
+.inav .c{position:absolute;left:90px;right:90px;text-align:center;font-weight:600;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inav .c small{display:block;font-size:11px;font-weight:400;color:var(--i-lab2);letter-spacing:0}
+.inav .ic{width:24px;height:24px}
+.scroll{position:absolute;left:0;right:0;top:100px;bottom:0;overflow:hidden}
+.sec{margin:0 16px}
+.sh{font-size:13px;color:var(--i-lab2);text-transform:uppercase;padding:18px 16px 7px;letter-spacing:0}
+.sf{font-size:13px;line-height:1.35;color:var(--i-lab2);padding:7px 16px 4px;letter-spacing:-.005em}
+.grp{background:var(--i-cell);border-radius:10px;overflow:hidden}
+.cell{display:flex;align-items:center;gap:12px;min-height:44px;padding:11px 16px;position:relative;font-size:17px}
+.cell+.cell::before{content:"";position:absolute;top:0;left:16px;right:0;height:.6px;background:var(--i-sep)}
+.cell.ind+.cell::before,.cell+.cell.ind::before{left:54px}
+.cell .grow{flex:1;min-width:0}
+.cell .k{flex:1} .cell .v{color:var(--i-lab2);font-feature-settings:"tnum"}
+.chev{width:14px;height:14px;color:var(--i-lab3);flex:none}
+.tl{color:var(--i-tint)}
+.tl .ic{width:22px;height:22px}
+.lab2{color:var(--i-lab2)}
+.pill{background:var(--i-fill);border-radius:7px;padding:6px 11px;font-size:17px;font-feature-settings:"tnum";white-space:nowrap}
+.bbtn{background:var(--i-fill);color:var(--i-tint);border-radius:8px;padding:6px 12px;font-size:15px;font-weight:500;white-space:nowrap}
+.pbtn{height:50px;border-radius:12px;background:var(--i-tint);color:var(--i-onTint);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:17px}
+.pbtn .ic{width:21px;height:21px}
+.botbar{position:absolute;left:0;right:0;padding:8px 16px;background:var(--i-bar);border-top:.6px solid var(--i-barLine);z-index:14;backdrop-filter:blur(20px)}
+.itabs{position:absolute;left:0;right:0;bottom:0;height:83px;display:flex;justify-content:space-around;padding:7px 4px 0;background:var(--i-bar);border-top:.6px solid var(--i-barLine);z-index:15}
+.itab{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:500;color:var(--i-lab2);width:80px;letter-spacing:0}
+.itab .ic{width:26px;height:26px}
+.itab.on{color:var(--i-tint)}
+.toggle{width:51px;height:31px;border-radius:16px;background:#34C759;position:relative;flex:none}
+.toggle::after{content:"";position:absolute;right:2px;top:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.seg{display:flex;background:var(--i-fill);border-radius:9px;padding:2px;font-size:14px;font-weight:500;width:100%}
+.seg span{flex:1;text-align:center;padding:6px 0;border-radius:7px}
+.seg span.on{background:var(--i-cell);box-shadow:0 2px 6px rgba(0,0,0,.14);font-weight:600}
+.dark .seg span.on{background:#636366}
+.updown{display:inline-flex;align-items:center;gap:4px;color:var(--i-lab2)}
+.updown svg{width:11px;height:15px}
+</style>`;
+
+const SYM = { // SF Symbol stand-ins used by the tab bar and rows
+  gauge: '<path d="M4.6 17.5a8.5 8.5 0 1 1 14.8 0"/><path d="m12 13 3.5-4.5"/><circle cx="12" cy="13.2" r="1.3"/>',
+  checklist: '<path d="M3.5 6.5 5 8l2.8-3M3.5 12.5 5 14l2.8-3M3.5 18.5 5 20l2.8-3"/><path d="M11 6.5h9.5M11 12.5h9.5M11 18.5h9.5"/>',
+  wrench: I.wrench, doc: I.doc, gear: I.gear,
+  airplaneCircle: '<circle cx="12" cy="12" r="9.6"/><path d="M12 6.4v4l4.2 2.6v1.2L12 13v2.8l1.4 1v.9L12 17.3l-1.4.4v-.9l1.4-1V13l-4.2 1.2V13l4.2-2.6"/>',
+  speedometer: '<path d="M4.6 17.5a8.5 8.5 0 1 1 14.8 0"/><path d="m12 13 3.5-4.5"/><circle cx="12" cy="13.2" r="1.3"/><path d="M6.5 13H5M19 13h-1.5M12 6.5V5"/>',
+  checkCircle: '<circle cx="12" cy="12" r="9.5"/><path d="m8 12.3 2.8 2.8L16.2 9.6"/>',
+  calendar: I.cal, airplane: '<path d="M12 3c.9 0 1.4 1 1.4 2.2v4.3l7 4.1v1.8l-7-2.1v4.1l2 1.5v1.4L12 19.4l-3.4.9v-1.4l2-1.5v-4.1l-7 2.1v-1.8l7-4.1V5.2C10.6 4 11.1 3 12 3z"/>',
+  book: I.book, share: I.share, chevL: I.chevL, chevR: I.chevR,
+};
+const sym = (n, cls = 'ic', sw = 1.8) => `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${SYM[n]}</svg>`;
+const chev = `<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">${I.chevR}</svg>`;
+const updown = '<span class="updown"><svg viewBox="0 0 11 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5 5.5 2 9 5.5M2 9.5 5.5 13 9 9.5"/></svg></span>';
+const iglyph = (status, size = 22) => `<span class="g st-${status}" style="width:${size}px;height:${size}px">${GLYPH[status]('var(--i-cell)')}</span>`;
+
+// RootView.MainTabView, in order.
+const TABS = [['gauge', 'Status'], ['checklist', 'ADs & Items'], ['wrench', 'Squawks'], ['doc', 'Reports'], ['gear', 'Settings']];
+const itabs = (on) => `<div class="itabs">${TABS.map(([ic, l]) => `<div class="itab ${l === on ? 'on' : ''}">${sym(ic, 'ic', 1.7)}<span>${l}</span></div>`).join('')}</div>`;
+
+// Swift string helpers (Models/Formatting.swift)
+const hrs = (h) => h.toFixed(1);
+const days = (n) => (n === 1 ? '1 day' : `${n} days`);
+const STATUS_LABEL = { overdue: 'Overdue', due_soon: 'Due soon', ok: 'Current', not_applicable: 'N/A', unknown: 'Needs info' };
+function throughText(i) {
+  if (i.status === 'not_applicable' || i.status === 'unknown') return i.reason || i.message;
+  if (i.governedBy === 'hours' && i.dueTach != null) return `Due at ${hrs(i.dueTach)} tach`;
+  if (i.dueDate) return i.status === 'overdue' && i.daysRemaining < 0 ? `Lapsed after ${fmt(i.dueDate)}` : `Current through ${fmt(i.dueDate)}`;
+  if (i.dueTach != null) return `Due at ${hrs(i.dueTach)} tach`;
+  return i.message;
 }
+function remainingPrimary(i) {
+  if (i.status === 'not_applicable') return 'N/A';
+  if (i.status === 'unknown') return '—';
+  const h = i.hoursRemaining, d = i.daysRemaining;
+  if (i.governedBy === 'hours' && h != null) return h < 0 ? `${hrs(-h)} hrs over` : `${hrs(h)} hrs`;
+  if (d != null) return d < 0 ? `${days(-d)} over` : d === 0 ? 'Today' : days(d);
+  if (h != null) return h < 0 ? `${hrs(-h)} hrs over` : `${hrs(h)} hrs`;
+  return '—';
+}
+function remainingSecondary(i) {
+  if (i.status === 'not_applicable' || i.status === 'unknown') return null;
+  if (i.governedBy === 'hours') return i.projectedDate ? `≈ ${fmt(i.projectedDate)}` : i.daysRemaining != null ? days(i.daysRemaining) : null;
+  if (i.hoursRemaining != null) return i.hoursRemaining < 0 ? `${hrs(-i.hoursRemaining)} hrs over` : `${hrs(i.hoursRemaining)} hrs`;
+  return null;
+}
+const nextDueText = (s) => `${s.nextDue.name} in ${days(s.nextDue.daysRemaining)} · ${fmt(s.nextDue.date)}`;
+
+// StatusBoardView.ItemRow
+const boardRow = (i) => `<div class="cell ind" style="align-items:flex-start">${iglyph(i.status, 24)}
+  <div class="grow"><div style="font-weight:600">${i.name}</div><div style="font-size:12px;color:var(--i-lab2);margin-top:1px">${i.citation}</div>
+    <div style="font-size:15px;margin-top:2px;${i.status === 'not_applicable' ? 'color:var(--i-lab2)' : ''}">${throughText(i)}</div></div>
+  <div style="text-align:right;flex:none;max-width:120px"><div class="st-${i.status}" style="font-weight:600;font-feature-settings:'tnum'">${remainingPrimary(i)}</div>
+    ${remainingSecondary(i) ? `<div style="font-size:12px;color:var(--i-lab2);margin-top:2px;font-feature-settings:'tnum'">${remainingSecondary(i)}</div>` : ''}</div>
+  <span style="align-self:center">${chev}</span></div>`;
+
+// StatusBoardView.HeroCard
+const ANSWER = { current: 'Yes', limited: 'Not all', overdue: 'No', incomplete: "Can't tell yet" };
+const SUM_GLYPH = { current: 'ok', limited: 'due_soon', overdue: 'overdue', incomplete: 'unknown' };
+const badge = (st, n, label) => `<span style="display:inline-flex;align-items:center;gap:4px">${iglyph(st, 13)}<b style="font-size:15px;font-feature-settings:'tnum'">${n}</b><span style="font-size:12px;color:var(--i-lab2)">${label}</span></span>`;
+const heroCell = (s = S) => `<div class="cell" style="display:block;padding:14px 16px">
+  <div style="font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--i-lab2)">ALL ITEMS CURRENT?</div>
+  <div style="display:flex;align-items:center;gap:12px;margin-top:9px">${iglyph(SUM_GLYPH[s.status], 36)}<span style="font-family:'Inter Display';font-size:34px;font-weight:700;letter-spacing:-.02em">${ANSWER[s.status]}</span></div>
+  <div style="font-size:15px;line-height:1.35;margin-top:9px">${s.headline}</div>
+  <div style="display:flex;gap:14px;margin-top:11px">${badge('overdue', s.counts.overdue, 'overdue')}${badge('due_soon', s.counts.due_soon, 'due soon')}${badge('ok', s.counts.ok, 'current')}${s.counts.unknown ? badge('unknown', s.counts.unknown, 'need info') : ''}</div></div>`;
 
 // ------------------------------------------------------------------ the six screens
 const shots = [];
 
-// 1. Board
+// 1. Status tab: hero + disclaimer + rows, Log flight above the tab bar
 {
-  const attention = rows.filter((r) => r.status === 'overdue' || r.status === 'due_soon');
-  const current = rows.filter((r) => r.status === 'ok').slice(0, 3);
-  const inner = `<div class="app">
-    <div class="nav"><div><div class="t">N731TB ${icon('chevD', 'ic', 2.4)}</div><div class="s">Beechcraft A36 · IFR · Oct 19, 2026</div></div>
-      <div class="btns"><div class="cbtn">${icon('gear')}</div><div class="logbtn">${icon('plus', 'ic', 2.6)}Log flight</div></div></div>
-    <div class="pad">${heroCard()}</div>
-    <div class="sech">Needs attention</div>
-    <div class="pad"><div class="card">${attention.map(rowHtml).join('')}</div></div>
-    <div class="sech">Current</div>
-    <div class="pad"><div class="card">${current.map(rowHtml).join('')}</div></div>
-    ${tabbar('Board')}</div>`;
-  shots.push({ file: '01-status-board', title: 'Status board', copy: { eyebrow: 'Status board', h1: 'All items current?<br><em>Know in two seconds.</em>', sub: 'Inspections, checks and recurring ADs on one red, yellow and green board, worst first.' }, mode: 'light', inner });
+  const inner = `${ICSS}<div class="app">
+    <div class="inav"><span class="l">${sym('airplaneCircle', 'ic', 1.6)}</span><span class="c">N731TB<small>Next due: ${nextDueText(S)}</small></span><span class="r"></span></div>
+    <div class="scroll" style="top:100px">
+      <div class="sec" style="margin-top:10px"><div class="grp">${heroCell()}</div></div>
+      <div class="sf">${DISCLAIMER}</div>
+      <div class="sh">${items.length} items · sorted by urgency</div>
+      <div class="sec"><div class="grp">${items.map(boardRow).join('')}</div></div>
+    </div>
+    <div class="botbar" style="bottom:83px"><div class="pbtn">${sym('speedometer', 'ic', 1.9)}Log flight</div></div>
+    ${itabs('Status')}</div>`;
+  shots.push({ file: '01-status-board', title: 'Status board', copy: { eyebrow: 'Status board', h1: 'All items current?<br><em>Know in two seconds.</em>', sub: 'Inspections, checks and recurring ADs on one board, worst first, each with its FAR citation.' }, mode: 'light', inner });
 }
 
-// 2. Item detail: transponder, every item cites its FAR
+// 2. Item detail: Transponder (ItemDetailView)
 {
   const t = items.find((i) => i.id === 'transponder');
-  const inner = `<div class="app">
-    <div class="navbar"><span class="back">${icon('chevL', 'ic', 2.4)}Board</span><span class="mid">Transponder</span><span class="act">${icon('share')}</span></div>
-    <div class="pad" style="margin-top:6px">
-      <div class="card" style="padding:18px 16px 16px">
-        <div style="display:flex;align-items:center;gap:10px">${glyph('due_soon')}<span class="tag st-due_soon" style="font-size:11px;margin:0">Due soon</span></div>
-        <div style="display:flex;align-items:baseline;gap:8px;margin-top:12px"><span class="answer num" style="font-size:48px;color:var(--dueSoon)">${t.daysRemaining}</span><span class="ov" style="font-size:13px">days left</span></div>
-        <div style="font-size:16px;color:var(--ink2);margin-top:4px">Current through <b style="color:var(--ink)">${fmt(t.dueDate)}</b></div>
-      </div>
+  const inner = `${ICSS}<div class="app">
+    <div class="inav"><span class="l">${sym('chevL', 'ic', 2.4)}N731TB</span><span class="c">Transponder</span><span class="r"></span></div>
+    <div class="scroll" style="top:100px">
+      <div class="sec" style="margin-top:10px"><div class="grp">
+        <div class="cell" style="padding:14px 16px">${iglyph(t.status, 38)}<div><div style="font-size:22px;font-weight:600;letter-spacing:-.015em">${STATUS_LABEL[t.status]}</div><div style="font-size:15px;color:var(--i-lab2);margin-top:1px">${throughText(t)}</div></div></div>
+        <div class="cell" style="font-size:16px">${t.message}</div></div></div>
+      <div class="sh">Numbers</div>
+      <div class="sec"><div class="grp">
+        <div class="cell"><span class="k">Last done</span><span class="v">${fmt(t.lastDone)}</span></div>
+        <div class="cell"><span class="k">Current through</span><span class="v">${fmt(t.dueDate)}</span></div>
+        <div class="cell"><span class="k">Days left</span><span class="v">${days(t.daysRemaining)}</span></div></div></div>
+      <div class="sh">The rule</div>
+      <div class="sec"><div class="grp">
+        <div class="cell" style="font-size:16px;line-height:1.38">${t.rule}</div>
+        <div class="cell tl" style="gap:10px">${sym('book', 'ic')}Read ${t.citation}</div></div></div>
+      <div class="sf">${SHORT_DISC}</div>
+      <div class="sec" style="margin-top:22px"><div class="grp">
+        <div class="cell tl" style="gap:12px">${sym('checkCircle', 'ic')}Mark done today</div>
+        <div class="cell tl" style="gap:12px">${sym('calendar', 'ic')}Edit date…</div>
+        <div class="cell tl" style="gap:12px">${sym('airplane', 'ic', 1.5)}Edit aircraft details…</div></div></div>
     </div>
-    <div class="sech">The rule</div>
-    <div class="pad"><div class="card" style="padding:14px 16px">
-      <div style="display:flex;align-items:center;gap:8px;color:var(--accent)">${icon('book', 'ic')}<span class="mono" style="font-size:13.5px;font-weight:600">14 CFR §91.413</span></div>
-      <p style="font-size:14.5px;line-height:1.45;color:var(--ink2);margin-top:8px;border-left:2px solid var(--line2);padding-left:10px">No person may use an ATC transponder unless, within the preceding <b style="color:var(--ink)">24 calendar months</b>, it has been tested and inspected and found to comply with appendix F of part 43.</p>
-      <div style="font-size:14px;color:var(--accent);font-weight:600;margin-top:10px">Read on eCFR ›</div>
-    </div></div>
-    <div class="sech">How we calculated this</div>
-    <div class="pad"><div class="card">
-      <div class="kv"><span class="k">Last test</span><span class="v">Oct 18, 2024</span></div>
-      <div class="kv"><span class="k">Interval</span><span class="v">24 calendar months</span></div>
-      <div class="kv"><span class="k">Runs to end of month</span><span class="v">Oct 31, 2026</span></div>
-    </div></div>
-    <div class="sech">Proof</div>
-    <div class="pad"><div class="card" style="display:flex;gap:12px;align-items:center;padding:12px 16px">
-      <div style="width:54px;height:70px;border-radius:6px;background:linear-gradient(180deg,#F4EBD7,#E9DDC2);border:1px solid #D9CCAF;position:relative;overflow:hidden;flex:none">
-        ${[14, 22, 30, 38, 46, 54].map((y) => `<i style="position:absolute;left:7px;right:${y % 16 ? 9 : 16}px;top:${y}px;height:1.5px;background:#7A6E5A;opacity:.55"></i>`).join('')}</div>
-      <div style="flex:1"><div style="font-weight:600;font-size:15.5px">Avionics logbook, p. 14</div><div style="font-size:13px;color:var(--ink3);margin-top:2px">Scanned Oct 2, 2026 · text searchable</div></div>
-      <span style="color:var(--ink3)">${icon('chevR', 'ic')}</span></div></div>
-    <div class="sech">History</div>
-    <div class="pad"><div class="card">
-      <div class="kv"><span class="k">Oct 18, 2024</span><span class="v" style="font-weight:500">Tested, appendix F</span></div>
-      <div class="kv"><span class="k">Oct 3, 2022</span><span class="v" style="font-weight:500">Tested, appendix F</span></div>
-    </div></div>
-    <div class="pad" style="position:absolute;left:0;right:0;bottom:0;padding-top:28px;padding-bottom:34px;background:linear-gradient(to bottom,transparent,var(--canvas) 34%)"><div class="btn">${icon('check', 'ic', 2.4)}Log done</div></div>
-  </div>`;
-  shots.push({ file: '02-far-citations', title: 'FAR citations', copy: { eyebrow: 'Show your work', h1: 'Every item cites<br><em>its FAR.</em>', sub: 'Tap any item for the rule, the math and the logbook page behind it.' }, mode: 'light', inner });
+    ${itabs('Status')}</div>`;
+  shots.push({ file: '02-far-citations', title: 'FAR citations', copy: { eyebrow: 'Show your work', h1: 'Every item cites<br><em>its FAR.</em>', sub: 'Tap any item for the rule in plain English, the dates behind it and a link to the regulation.' }, mode: 'light', inner });
 }
 
-// 3. Calendar-month math (onboarding step 3, dark)
+// 3. Setup: Inspections & dates step (OnboardingView + AircraftInspectionsSection), dark
 {
-  // March 2026 starts on a Sunday.
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
-  const cells = days.map((d) => `<span class="${d === 15 ? 'sel' : d === 31 ? 'eom' : ''}">${d}</span>`).join('');
-  const months = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
-  const inner = `<style>
-    .cal{display:grid;grid-template-columns:repeat(7,1fr);row-gap:4px;text-align:center;font-size:19px;font-feature-settings:"tnum";margin-top:8px}
-    .cal b{font-size:12px;font-weight:600;color:var(--ink3);padding:6px 0}
-    .cal span{height:42px;display:grid;place-items:center;border-radius:21px;margin:0 3px}
-    .cal .sel{background:var(--accent);color:var(--onAccent);font-weight:700}
-    .cal .eom{box-shadow:0 0 0 1.5px var(--line2) inset}
-    .tl{display:grid;grid-template-columns:repeat(13,1fr);gap:3px;margin-top:14px}
-    .tl i{height:26px;border-radius:5px;background:var(--currentFill);opacity:.85}
-    .tl i:first-child{background:var(--accent);opacity:1}
-    .tl i:last-child{background:var(--currentFill);opacity:1;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--currentFill)}
-    .tlm{display:grid;grid-template-columns:repeat(13,1fr);gap:3px;margin-top:6px;font-family:"DejaVu Sans Mono";font-size:8.5px;color:var(--ink3);text-align:center}
-    .prog{display:flex;gap:6px}.prog i{flex:1;height:4px;border-radius:2px;background:var(--line2)}.prog i.on{background:var(--accent)}
-  </style><div class="app">
-    <div class="navbar"><span class="back">${icon('chevL', 'ic', 2.4)}Back</span><span class="mid" style="font-size:15px;color:var(--ink3);font-weight:500">Step 3 of 5</span><span class="act" style="font-weight:400">Skip</span></div>
-    <div class="pad" style="margin-top:4px"><div class="prog"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div></div>
-    <div class="pad" style="margin-top:22px">
-      <div style="font-family:'Inter Display';font-size:30px;font-weight:700;letter-spacing:-.02em;line-height:1.12">When was your last<br>annual inspection?</div>
-      <div class="mono" style="font-size:12.5px;color:var(--ink3);margin-top:8px">14 CFR §91.409(a) · 12 calendar months</div>
+  const dateRow = (title, value, foot) => `<div class="cell" style="display:block;padding:10px 16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span>${title}</span>${value ? `<span class="pill">${value}</span>` : '<span class="bbtn">Set date</span>'}</div>
+    ${value ? '<div style="font-size:12px;color:var(--i-tint);margin-top:8px">Don’t know yet</div>' : '<div style="font-size:12px;color:var(--i-lab2);margin-top:8px">Don’t know yet — shows as Needs info until you add it.</div>'}
+    ${foot ? `<div style="font-size:12px;color:var(--i-lab2);margin-top:4px">${foot}</div>` : ''}</div>`;
+  const inner = `${ICSS}<div class="app">
+    <div class="inav"><span class="l">Back</span><span class="c">Inspections &amp; dates</span><span class="r"></span></div>
+    <div style="padding:2px 16px 0"><div style="font-size:12px;color:var(--i-lab2)">Step 3 of 4</div>
+      <div style="height:4px;border-radius:2px;background:var(--i-fill);margin-top:5px"><div style="width:75%;height:100%;border-radius:2px;background:var(--i-tint)"></div></div></div>
+    <div class="scroll" style="top:132px">
+      <div class="sec" style="margin-top:12px"><div class="grp"><div class="cell" style="font-size:15px;color:var(--i-lab2);line-height:1.35">Enter what you know from your logbook or the stickers. Anything you skip shows as “Needs info”; nothing is guessed.</div></div></div>
+      <div class="sh">Annual</div>
+      <div class="sec"><div class="grp">${dateRow('Last annual', 'Mar 15, 2026', 'Good through the last day of that month next year (§91.409(a)).')}</div></div>
+      <div class="sh">Avionics checks</div>
+      <div class="sec"><div class="grp">${dateRow('Transponder check', 'Oct 18, 2024', '24 calendar months (§91.413).')}${dateRow('Pitot-static / altimeter', 'Nov 2, 2024', '24 calendar months, IFR (§91.411).')}${dateRow('VOR check', null, 'Within the preceding 30 days, IFR (§91.171).')}</div></div>
+      <div class="sh">ELT</div>
+      <div class="sec"><div class="grp">${dateRow('ELT inspection', 'Mar 15, 2026', '12 calendar months (§91.207(d)).')}</div></div>
     </div>
-    <div class="pad" style="margin-top:18px"><div class="card" style="padding:14px 12px 10px">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:0 6px"><span style="font-weight:650;font-size:17px">March 2026 <span style="color:var(--accent)">›</span></span>
-        <span style="display:flex;gap:22px;color:var(--accent)">${icon('chevL', 'ic', 2.4)}${icon('chevR', 'ic', 2.4)}</span></div>
-      <div class="cal">${['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map((d) => `<b>${d}</b>`).join('')}${cells}</div>
-    </div></div>
-    <div class="pad" style="margin-top:14px"><div class="card" style="padding:16px">
-      <div style="display:flex;gap:10px;align-items:flex-start">${glyph('ok')}<div><div style="font-weight:650;font-size:17px">Good through <span style="color:var(--current)">Mar 31, 2027</span></div>
-      <div style="font-size:14px;color:var(--ink2);margin-top:3px;line-height:1.4">Calendar months run to the <b style="color:var(--ink)">end</b> of the 12th month, not the anniversary date.</div></div></div>
-      <div class="tl">${months.map(() => '<i></i>').join('')}</div>
-      <div class="tlm">${months.map((m) => `<span>${m}</span>`).join('')}</div>
-    </div></div>
-    <div class="pad" style="position:absolute;left:0;right:0;bottom:34px">
-      <div class="btn2" style="margin-bottom:10px">${icon('camera')}Don't know? Snap the logbook entry</div>
-      <div class="btn">Continue</div></div>
+    <div class="botbar" style="bottom:0;padding-bottom:34px"><div class="pbtn">Next</div></div>
   </div>`;
-  shots.push({ file: '03-calendar-months', title: 'Calendar months', copy: { eyebrow: 'Calendar months', h1: 'Month-end math,<br><em>done right.</em>', sub: 'Done March 3 or March 31, it’s good through the end of the month. TailBook knows.' }, mode: 'dark', inner });
+  shots.push({ file: '03-calendar-months', title: 'Five-minute setup', copy: { eyebrow: 'Five-minute setup', h1: 'Enter what you know.<br><em>Skip what you don’t.</em>', sub: 'Calendar-month items run to the last day of the month. Anything you skip shows as Needs info, never a guess.' }, mode: 'dark', inner });
 }
 
-// 4. Recurring AD: whichever first
+// 4. AD editor sheet: whichever first (TrackedItemEditor)
 {
-  const ad = items.find((i) => i.kind === 'ad' || /^AD /.test(i.name));
-  const hrsLeft = ad.hoursRemaining.toFixed(1);
-  const inner = `<style>
-    .clock{padding:16px;position:relative}
-    .clock+.clock{border-top:1px solid var(--line)}
-    .clock .hd{display:flex;align-items:center;gap:8px;color:var(--ink2);font-size:14px;font-weight:600}
-    .clock .hd .ic{width:18px;height:18px;color:var(--ink3)}
-    .clock .big{display:flex;align-items:baseline;gap:8px;margin-top:6px}
-    .clock .big b{font-family:'Inter Display';font-size:36px;font-weight:700;letter-spacing:-.02em;font-feature-settings:"tnum"}
-    .bar{height:8px;border-radius:4px;background:var(--neutralBg);margin-top:10px;overflow:hidden}
-    .bar i{display:block;height:100%;border-radius:4px;background:var(--currentFill)}
-    .gov{position:absolute;right:16px;top:16px;font-family:'DejaVu Sans Mono';font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accentSoft);padding:3px 6px;border-radius:5px}
-  </style><div class="app">
-    <div class="navbar"><span class="back">${icon('chevL', 'ic', 2.4)}ADs</span><span class="mid"></span><span class="act">Edit</span></div>
-    <div class="pad" style="margin-top:8px"><div style="display:flex;align-items:center;gap:10px">${glyph('ok')}<span class="tag st-ok" style="font-size:11px;margin:0">Current</span></div>
-      <div class="mono" style="font-size:27px;font-weight:700;margin-top:10px;letter-spacing:-.01em">AD 2020-18-04</div>
-      <div style="font-size:15px;color:var(--ink2);margin-top:4px">Recurring inspection · every 100 hrs or 12 calendar months, whichever comes first</div></div>
-    <div class="sech">Two clocks</div>
-    <div class="pad"><div class="card">
-      <div class="clock"><span class="gov">Comes first</span><div class="hd">${icon('cal')}Calendar</div>
-        <div class="big"><b>${ad.daysRemaining}</b><span class="ov" style="font-size:12px">days left</span></div>
-        <div style="font-size:14px;color:var(--ink2)">Due by <b style="color:var(--ink)">${fmt(ad.dueDate)}</b></div>
-        <div class="bar"><i style="width:${Math.round((1 - ad.daysRemaining / 386) * 100)}%"></i></div></div>
-      <div class="clock"><div class="hd">${icon('gauge')}Tach hours</div>
-        <div class="big"><b>${hrsLeft}</b><span class="ov" style="font-size:12px">hrs left</span></div>
-        <div style="font-size:14px;color:var(--ink2)">Due at <b style="color:var(--ink)">1,290.0</b> tach · about ${fmt(ad.projectedDate)} at your pace</div>
-        <div class="bar"><i style="width:${Math.round((1 - ad.hoursRemaining / 100) * 100)}%"></i></div></div>
-    </div></div>
-    <div class="sech">Compliance</div>
-    <div class="pad"><div class="card">
-      <div class="kv"><span class="k">Last done</span><span class="v">Jan 10, 2026 · 1,190.0</span></div>
-      <div class="kv"><span class="k">Method</span><span class="v">Inspection per AD ¶(g)</span></div>
-      <div class="kv"><span class="k">Logbook</span><span class="v" style="color:var(--accent)">Airframe p. 31 ›</span></div>
-    </div></div>
-    <div class="pad" style="margin-top:14px"><div class="note">${icon('info')}<span>TailBook tracks the ADs you add. Your IA determines which ADs apply to your aircraft.</span></div></div>
-    ${tabbar('ADs')}
-  </div>`;
-  shots.push({ file: '04-recurring-ads', title: 'Recurring ADs', copy: { eyebrow: 'Recurring ADs', h1: 'Hours or months,<br><em>whichever comes first.</em>', sub: 'TailBook watches both clocks and projects the hours side from how much you fly.' }, mode: 'light', inner });
+  const inner = `${ICSS}<style>.dimtop{position:absolute;left:0;right:0;top:0;height:120px;background:#000}
+    .behind{position:absolute;left:14px;right:14px;top:48px;height:60px;border-radius:12px 12px 0 0;background:#8E8E93;opacity:.55}
+    .esheet{position:absolute;left:0;right:0;top:60px;bottom:0;border-radius:12px 12px 0 0;background:var(--i-bg);overflow:hidden}
+    .ios .sbar{color:#fff}</style>
+  <div class="dimtop"></div><div class="behind"></div>
+  <div class="app" style="padding-top:0"><div class="esheet">
+    <div class="inav" style="margin-top:6px"><span class="l">Cancel</span><span class="c">Edit AD</span><span class="r">Save</span></div>
+    <div style="position:absolute;left:0;right:0;top:56px;bottom:0;overflow:hidden">
+      <div class="sh" style="padding-top:8px">Airworthiness Directive</div>
+      <div class="sec"><div class="grp"><div class="cell"><span style="font-family:'DejaVu Sans Mono';font-size:16px">2020-18-04</span></div><div class="cell">Recurring inspection</div></div></div>
+      <div class="sec" style="margin-top:22px"><div class="grp"><div class="cell"><div class="seg"><span class="on">Recurring</span><span>One-time</span></div></div>
+        <div class="cell"><span class="k">Applies to this aircraft</span><span class="toggle"></span></div></div></div>
+      <div class="sf">Applicability is your A&amp;P/IA’s determination. Turn it off to keep the AD on file as not applicable.</div>
+      <div class="sh">Interval</div>
+      <div class="sec"><div class="grp">
+        <div class="cell"><span class="k">Repeats by</span><span class="v" style="font-size:15px">Hours or time, whichever first</span>${updown}</div>
+        <div class="cell"><span class="k">Every</span><span style="font-feature-settings:'tnum'">100.0</span><span class="lab2">hrs</span></div>
+        <div class="cell"><span class="k">Time unit</span><span class="v">Calendar months</span>${updown}</div>
+        <div class="cell"><span class="k">or every</span><span style="font-feature-settings:'tnum'">12</span><span class="lab2">calendar months</span></div></div></div>
+      <div class="sf">Hours are tach hours. Good through the last day of the month (e.g. done Mar 5 + 12 → Mar 31 next year). Due at whichever limit comes first.</div>
+      <div class="sh">Last complied with</div>
+      <div class="sec"><div class="grp">
+        <div class="cell" style="display:block;padding:10px 16px"><div style="display:flex;align-items:center;justify-content:space-between"><span>Last done</span><span class="pill">Jan 10, 2026</span></div><div style="font-size:12px;color:var(--i-tint);margin-top:8px">Don’t know yet</div></div>
+        <div class="cell"><span class="k">Tach when done</span><span style="font-feature-settings:'tnum'">1190.0</span></div></div></div>
+      <div class="sf">A whichever-first item needs both the date and the tach to show as current.</div>
+    </div></div></div>`;
+  shots.push({ file: '04-recurring-ads', title: 'Recurring ADs', copy: { eyebrow: 'Recurring ADs', h1: 'Hours or months,<br><em>whichever comes first.</em>', sub: 'Enter both limits once. TailBook tracks each and shows you the one that comes due first.' }, mode: 'light', inner });
 }
 
-// 5. Log flight sheet (dark)
+// 5. Log flight sheet (LogFlightSheet), dark, decimal pad up
 {
-  const perDay = profile.aircraft.avgHoursPerMonth / 30.4375;
-  const oil = items.find((i) => i.id === 'oilChange' || i.name === 'Oil change');
-  const newLeft = +(oil.hoursRemaining - 1.6).toFixed(1);
-  const d = new Date(Date.UTC(2026, 9, 19 + Math.floor(newLeft / perDay)));
-  const proj = `${MON[d.getUTCMonth()]} ${d.getUTCDate()}`;
-  const behind = rows.filter((r) => r.status !== 'not_applicable').slice(0, 4);
-  const inner = `<style>
-    .dim{position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:17}
-    .sheet{position:absolute;left:0;right:0;bottom:0;top:262px;background:var(--surface);border-radius:24px 24px 0 0;z-index:18;padding:8px 16px 0;box-shadow:0 -10px 40px rgba(0,0,0,.4)}
-    .grab{width:38px;height:5px;border-radius:3px;background:var(--line2);margin:0 auto 10px}
-    .tach{display:flex;align-items:baseline;justify-content:center;gap:10px;margin-top:6px}
-    .tach b{font-family:'Inter Display';font-size:64px;font-weight:700;letter-spacing:-.02em;font-feature-settings:"tnum"}
-    .caret{display:inline-block;width:3px;height:56px;background:var(--accent);margin-left:2px;transform:translateY(6px);border-radius:2px}
-    .field{background:var(--surface2);border:1.5px solid var(--accent);border-radius:14px;padding:12px 16px 14px;margin-top:12px}
-    .pv{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--surface2);border-radius:12px;margin-top:10px;border:1px solid var(--line)}
-    .keys{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:0 -10px;padding:8px 6px 40px;background:var(--canvas);position:absolute;left:10px;right:10px;bottom:0}
-    .keys span{height:47px;border-radius:8px;background:var(--surface2);display:grid;place-items:center;font-size:25px;font-weight:400;box-shadow:0 1px 0 rgba(0,0,0,.35)}
+  const inner = `${ICSS}<style>.dimtop{position:absolute;left:0;right:0;top:0;height:120px;background:#000}
+    .behind{position:absolute;left:14px;right:14px;top:48px;height:60px;border-radius:12px 12px 0 0;background:#2C2C2E}
+    .esheet{position:absolute;left:0;right:0;top:60px;bottom:0;border-radius:12px 12px 0 0;background:var(--i-bg);overflow:hidden}
+    .keys{position:absolute;left:0;right:0;bottom:0;height:300px;background:#2B2B2D;padding:8px 6px 0;display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:47px;gap:7px}
+    .keys span{border-radius:6px;background:#6B6B6F;display:grid;place-items:center;font-size:25px;color:#fff;box-shadow:0 1px 0 rgba(0,0,0,.4)}
     .keys span.f{background:transparent;box-shadow:none}
-  </style><div class="app">
-    <div class="nav"><div><div class="t">N731TB ${icon('chevD', 'ic', 2.4)}</div><div class="s">Beechcraft A36 · IFR</div></div><div class="btns"><div class="cbtn">${icon('gear')}</div></div></div>
-    <div class="pad"><div class="card">${behind.map(rowHtml).join('')}</div></div>
-    <div class="dim"></div>
-    <div class="sheet"><div class="grab"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center"><span style="color:var(--accent);font-size:17px">Cancel</span><span style="font-weight:650;font-size:17px">Log flight</span><span style="width:52px"></span></div>
-      <div class="field"><div style="display:flex;justify-content:space-between"><span class="ov">Tach now</span><span class="ov">Last: 1,250.4</span></div>
-        <div class="tach"><b>1,252.0</b><span class="caret"></span></div>
-        <div style="display:flex;justify-content:center;gap:8px;font-size:13.5px;color:var(--ink2);margin-top:2px"><span>Today, Oct 19</span><span style="color:var(--ink3)">·</span><span>Pilot: Me</span><span style="color:var(--ink3)">·</span><span style="color:var(--accent)">Add Hobbs</span></div></div>
-      <div class="pv">${glyph('due_soon')}<div style="flex:1"><div style="font-weight:600;font-size:15.5px">Oil change</div><div style="font-size:13px;color:var(--ink2);margin-top:1px">${oil.hoursRemaining.toFixed(1)} → <b style="color:var(--dueSoon)">${newLeft.toFixed(1)} hrs left</b> · about ${proj}</div></div></div>
-      <div class="btn" style="margin-top:14px">Log 1.6 hrs</div>
-      <div class="keys">${['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', '⌫'].map((k) => `<span class="${k === '.' || k === '⌫' ? 'f' : ''}">${k}</span>`).join('')}</div>
-    </div>
-  </div>`;
-  shots.push({ file: '05-log-flight', title: 'Log flight', copy: { eyebrow: 'Tach log', h1: 'Log a flight.<br><em>The board updates.</em>', sub: 'Hours-based items turn into dates at your pace, so oil changes and ADs never sneak up.' }, mode: 'dark', inner });
+    .caret{display:inline-block;width:3px;height:36px;background:var(--i-tint);margin-left:2px;vertical-align:-5px;border-radius:2px}</style>
+  <div class="dimtop"></div><div class="behind"></div>
+  <div class="app" style="padding-top:0"><div class="esheet">
+    <div class="inav" style="margin-top:6px"><span class="l">Cancel</span><span class="c">Log flight</span><span class="r">Save</span></div>
+    <div class="sh" style="padding-top:8px">New tach reading · N731TB</div>
+    <div class="sec"><div class="grp">
+      <div class="cell" style="justify-content:center;padding:14px 16px"><span style="font-size:34px;font-weight:600;font-feature-settings:'tnum';letter-spacing:-.01em">1251.6</span><span class="caret"></span></div>
+      <div class="cell" style="gap:8px">${[0.5, 1.0, 1.5, 2.0, 3.0].map((a) => `<span class="bbtn" style="font-feature-settings:'tnum'">+${a.toFixed(1)}</span>`).join('')}</div>
+      <div class="cell" style="font-size:15px;font-feature-settings:'tnum'"><span class="k">Was 1250.4</span><span class="lab2">+1.2 hrs</span></div></div></div>
+    <div class="sec" style="margin-top:22px"><div class="grp">
+      <div class="cell"><span class="k">Hobbs</span><span style="color:var(--i-lab3)">Optional</span></div>
+      <div class="cell"><span class="k">Date</span><span class="pill">Oct 19, 2026</span><span class="pill">9:41 AM</span></div>
+      <div class="cell"><span style="color:var(--i-lab3)">Note (optional)</span></div></div></div>
+    <div class="keys">${['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', '⌫'].map((k) => `<span class="${k === '.' || k === '⌫' ? 'f' : ''}">${k}</span>`).join('')}</div>
+  </div></div>`;
+  shots.push({ file: '05-log-flight', title: 'Log flight', copy: { eyebrow: 'Tach log', h1: 'Log a flight.<br><em>The board updates.</em>', sub: 'Type the new tach or tap +1.0. Oil changes and hours-based ADs re-project to dates at your pace.' }, mode: 'dark', inner });
 }
 
-// 6. Status Report PDF
+// 6. Aircraft Status Report PDF preview (ReportsView → PDFPreviewScreen; layout from Services/PDFExporter.swift)
 {
-  const rep = rows.filter((r) => r.status !== 'not_applicable');
-  const lastDone = { 'ELT battery': 'Exp. Sep 2026', Transponder: 'Oct 18, 2024', 'VOR check': 'Oct 1, 2026', 'Oil change': '1,210.0 tach', 'Pitot-static & altimeter': 'Nov 2, 2024', 'AD 2020-18-04': 'Jan 10, 2026', 'Annual inspection': 'Mar 15, 2026', 'ELT inspection': 'Mar 15, 2026', Registration: 'Exp. Jun 2029' };
-  const dueCol = (r) => { const it = items.find((i) => rowModel(i).name === r.name); return r.unit && r.unit.startsWith('hrs') ? `${it.dueTach.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} tach` : fmt(it.dueDate); };
-  const inner = `<style>
-    .viewer{position:absolute;left:0;right:0;top:98px;bottom:96px;background:var(--canvas);padding:14px 14px 0}
-    .paper{background:#fff;color:#0E1621;border-radius:4px;box-shadow:0 2px 10px rgba(16,24,40,.12),0 0 0 1px rgba(16,24,40,.06);padding:20px 18px 14px;height:100%;position:relative;overflow:hidden;
-      --knock:#fff;--overdueFill:${tokens.light.overdueFill};--dueSoonFill:${tokens.light.dueSoonFill};--currentFill:${tokens.light.currentFill};--neutralFill:${tokens.light.neutralFill}}
-    .paper h3{font-family:'Inter Display';font-size:17px;font-weight:700;letter-spacing:-.01em}
-    .paper .meta{font-size:8.5px;color:#5B6676;margin-top:3px}
-    .ptab{width:100%;border-collapse:collapse;margin-top:10px;font-size:8.6px}
-    .ptab th{font-family:'DejaVu Sans Mono';font-size:6.6px;letter-spacing:.08em;text-transform:uppercase;color:#5B6676;font-weight:600;text-align:left;padding:5px 3px;border-bottom:1.2px solid #0E1621}
-    .ptab td{padding:6px 3px;border-bottom:.8px solid #DCE1E8;vertical-align:middle;font-feature-settings:"tnum"}
-    .ptab td.c{font-family:'DejaVu Sans Mono';font-size:6.6px;color:#5B6676}
-    .ptab .g{width:10px;height:10px;vertical-align:-2px;margin-right:3px}
-    .ptab .w{font-family:'DejaVu Sans Mono';font-size:6.4px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
-    .sumbox{display:flex;align-items:center;gap:8px;border:1.2px solid #0E1621;border-radius:6px;padding:7px 9px;margin-top:10px;font-size:10px}
-    .sumbox .g{width:16px;height:16px}
-    .pfoot{position:absolute;left:18px;right:18px;bottom:12px;font-size:6.6px;line-height:1.45;color:#5B6676;border-top:.8px solid #DCE1E8;padding-top:6px}
+  const LONG_DISC = 'TailBook is an organizational tool. It records and calculates dates and times from information you provide and displays reminders. TailBook does not inspect aircraft, does not determine airworthiness, and does not determine whether any Airworthiness Directive or other requirement applies to your aircraft. Your A&amp;P mechanic or Inspection Authorization holder and the pilot in command are solely responsible for determining airworthiness (see 14 CFR 91.7, 91.403). Always verify against your aircraft’s maintenance records and current regulations before flight. TailBook may contain errors.';
+  const PDF_COLOR = { overdue: tokens.light.overdue, due_soon: tokens.light.dueSoon, ok: tokens.light.current, not_applicable: '#616161', unknown: '#616161' };
+  const dueText = (i) => {
+    if (i.status === 'not_applicable' || i.status === 'unknown') return i.reason || i.message;
+    const parts = [];
+    if (i.dueDate) parts.push(fmt(i.dueDate));
+    if (i.dueTach != null) parts.push(`${hrs(i.dueTach)} tach${i.projectedDate ? ` (≈ ${fmt(i.projectedDate)})` : ''}`);
+    return parts.length > 1 ? `${parts.join(' or ')}, whichever first` : parts[0] || i.message;
+  };
+  const details = (i) => [i.lastDone ? `Last done ${fmt(i.lastDone)}` : null, i.lastDoneTach != null ? `at ${hrs(i.lastDoneTach)} tach` : null].filter(Boolean).join(' · ');
+  const rowsHtml = items.map((i) => `<tr class="${details(i) ? '' : 'nd'}"><td>${i.name}</td><td class="gy">${i.citation}</td><td style="color:${PDF_COLOR[i.status]}">${STATUS_LABEL[i.status]}</td><td>${dueText(i)}</td><td>${[remainingPrimary(i), remainingSecondary(i)].filter(Boolean).join('<br>')}</td></tr>
+    ${details(i) ? `<tr class="dl"><td colspan="5">${details(i)}</td></tr>` : ''}`).join('');
+  const inner = `${ICSS}<style>
+    .viewer{position:absolute;left:0;right:0;top:100px;bottom:0;background:#E5E5EA;overflow:hidden}
+    .paper{position:absolute;left:14px;top:14px;width:612px;height:792px;transform:scale(.66);transform-origin:0 0;background:#fff;color:#141414;box-shadow:0 2px 12px rgba(0,0,0,.18);
+      padding:48px;font-family:"Inter",sans-serif;letter-spacing:0}
+    .paper h3{font-size:22px;font-weight:700}
+    .paper .gy{color:#616161}
+    .ptab{width:100%;border-collapse:collapse;font-size:9px;line-height:1.3;margin-top:4px}
+    .ptab th{text-align:left;font-weight:700;padding:3px 3px 4px;border-bottom:.8px solid #C7C7C7}
+    .ptab td{padding:4px 3px 2px;vertical-align:top}
+    .ptab tr.nd td{border-bottom:.8px solid #C7C7C7;padding-bottom:4px}
+    .ptab tr.dl td{font-size:8px;color:#616161;padding:0 3px 4px 11px;border-bottom:.8px solid #C7C7C7}
+    .ptab col.a{width:27%} .ptab col.b{width:19%} .ptab col.c{width:12%} .ptab col.d{width:26%} .ptab col.e{width:16%}
+    .pfoot{position:absolute;left:48px;right:48px;bottom:30px;font-size:7.5px;color:#616161}
   </style><div class="app">
-    <div class="navbar"><span class="back">${icon('chevL', 'ic', 2.4)}Reports</span><span class="mid">Status Report</span><span class="act">${icon('printer')}${icon('share')}</span></div>
+    <div class="inav"><span class="l">${sym('chevL', 'ic', 2.4)}Reports</span><span class="c">Aircraft Status Report</span><span class="r">${sym('share', 'ic', 1.8)}</span></div>
     <div class="viewer"><div class="paper">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start"><div><h3>Aircraft Status Report</h3><div class="meta">N731TB · Beechcraft A36 · IFR · Tach 1,250.4</div></div>
-        <div style="text-align:right" class="meta">Prepared Oct 19, 2026<br>from owner-entered data</div></div>
-      <div class="sumbox">${glyph(SUM_GLYPH[S.status])}<div><b>All tracked items current: No.</b> ELT battery overdue · 3 due soon</div></div>
-      <table class="ptab"><thead><tr><th>Status</th><th>Item</th><th>Last done</th><th>Due</th><th style="text-align:right">Left</th></tr></thead><tbody>
-      ${rep.map((r) => `<tr><td>${glyph(r.status)}<span class="w" style="color:${{ overdue: tokens.light.overdue, due_soon: tokens.light.dueSoon, ok: tokens.light.current }[r.status]}">${TAG[r.status]}</span></td>
-        <td><b style="font-weight:600">${r.name}</b><div class="c">${r.cite}</div></td><td>${lastDone[r.name] || ''}</td><td>${dueCol(r)}</td>
-        <td style="text-align:right;font-weight:600">${r.value}${r.unit && r.unit.startsWith('hrs') ? ' h' : ' d'}${r.unit && r.unit.includes('over') ? ' over' : ''}</td></tr>`).join('')}
-      </tbody></table>
-      <div style="font-family:'DejaVu Sans Mono';font-size:6.6px;letter-spacing:.08em;text-transform:uppercase;color:#5B6676;font-weight:600;margin-top:14px;padding-bottom:5px;border-bottom:1.2px solid #0E1621">Open squawks (2)</div>
-      <div style="font-size:8.6px;padding:6px 3px;border-bottom:.8px solid #DCE1E8">Left brake feels soft on taxi <span style="color:#5B6676">· noted Oct 4</span></div>
-      <div style="font-size:8.6px;padding:6px 3px;border-bottom:.8px solid #DCE1E8">Right nav light intermittent <span style="color:#5B6676">· noted Sep 21</span></div>
-      <div style="display:flex;gap:18px;margin-top:22px;font-size:7.5px;color:#5B6676"><div style="flex:2;border-top:.8px solid #0E1621;padding-top:4px">Reviewed by (A&amp;P/IA), certificate no.</div><div style="flex:1;border-top:.8px solid #0E1621;padding-top:4px">Date</div></div>
-      <div class="pfoot">${DISCLAIMER} &nbsp;·&nbsp; Page 1 of 1</div>
+      <h3>Aircraft Status Report</h3>
+      <div style="font-size:13px;margin-top:2px">N731TB · Beechcraft A36</div>
+      <div class="gy" style="font-size:10px;margin-top:2px">As of ${fmt(AS_OF)} · Tach 1250.4 · Hobbs 1612.0 · IFR</div>
+      <div style="border-top:.8px solid #C7C7C7;margin:6px 0 10px"></div>
+      <div style="font-size:15px;font-weight:700">All items current?  ${ANSWER[S.status]}</div>
+      <div style="font-size:10.5px;margin-top:6px">${S.headline}</div>
+      <div class="gy" style="font-size:10.5px;margin-top:6px">Next due: ${nextDueText(S)}</div>
+      <div class="gy" style="font-size:8.5px;font-style:italic;margin-top:12px;line-height:1.3">${LONG_DISC}</div>
+      <table class="ptab" style="margin-top:10px"><colgroup><col class="a"><col class="b"><col class="c"><col class="d"><col class="e"></colgroup>
+        <thead><tr><th>Item</th><th>Citation</th><th>Status</th><th>Current through / due</th><th>Remaining</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+      <div class="pfoot">${SHORT_DISC} Always verify against your logbooks. Generated by TailBook on ${fmt(AS_OF)}.&nbsp;&nbsp; Page 1</div>
     </div></div>
-    <div class="pad" style="position:absolute;left:0;right:0;bottom:34px;display:flex;gap:10px"><div class="btn2" style="flex:1">${icon('person2')}Send to my IA</div><div class="btn" style="flex:1">${icon('share')}Share PDF</div></div>
-  </div>`;
-  shots.push({ file: '06-status-report', title: 'Status report', copy: { eyebrow: 'Status report', h1: 'A report your IA<br><em>can check.</em>', sub: 'One-page PDF with citations and dates for your shop, insurer or buyer.' }, mode: 'light', inner });
+    ${itabs('Reports')}</div>`;
+  shots.push({ file: '06-status-report', title: 'Status report', copy: { eyebrow: 'Status report', h1: 'A report your IA<br><em>can check.</em>', sub: 'A PDF with every item, its citation and its dates, for your shop, insurer or buyer.' }, mode: 'light', inner });
 }
+
 
 // ------------------------------------------------------------------ write + render
-for (const s of shots) writeFileSync(join(srcDir, `${s.file}.html`), page(s.title, s.copy, phone(s.mode, s.inner)));
+for (const s of shots) writeFileSync(join(srcDir, `${s.file}.html`), page(s.title, s.copy, phone(`ios ${s.mode}`, s.inner)));
 
 const require = createRequire(import.meta.url);
 const pw = [process.env.PLAYWRIGHT_MODULE, 'playwright', '/opt/node22/lib/node_modules/playwright'].filter(Boolean)

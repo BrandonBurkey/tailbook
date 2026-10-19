@@ -106,6 +106,7 @@ struct StatusBoardView: View {
             } label: {
                 Label("Log flight", systemImage: "speedometer")
                     .font(.headline)
+                    .foregroundStyle(Theme.onAccent)
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
@@ -178,7 +179,7 @@ struct HeroCard: View {
                 .foregroundStyle(.secondary)
             HStack(spacing: 12) {
                 Image(systemName: Theme.symbol(for: summary.status))
-                    .font(.system(size: 34, weight: .semibold))
+                    .font(.largeTitle.weight(.semibold))
                     .foregroundStyle(Theme.color(for: summary.status))
                     .accessibilityHidden(true)
                 Text(summary.answer)
@@ -188,30 +189,38 @@ struct HeroCard: View {
                 .font(.subheadline)
                 .fixedSize(horizontal: false, vertical: true)
             HStack(spacing: 14) {
-                CountBadge(count: summary.counts.overdue, label: "overdue", color: Theme.statusRed)
-                CountBadge(count: summary.counts.dueSoon, label: "due soon", color: Theme.statusYellow)
-                CountBadge(count: summary.counts.ok, label: "current", color: Theme.statusGreen)
+                CountBadge(count: summary.counts.overdue, label: "overdue", color: Theme.statusRed,
+                           symbol: Theme.symbol(for: ItemStatus.overdue))
+                CountBadge(count: summary.counts.dueSoon, label: "due soon", color: Theme.statusYellow,
+                           symbol: Theme.symbol(for: ItemStatus.dueSoon))
+                CountBadge(count: summary.counts.ok, label: "current", color: Theme.statusGreen,
+                           symbol: Theme.symbol(for: ItemStatus.ok))
                 if summary.counts.unknown > 0 {
-                    CountBadge(count: summary.counts.unknown, label: "need info", color: Color.secondary)
+                    CountBadge(count: summary.counts.unknown, label: "need info", color: Color.secondary,
+                               symbol: Theme.symbol(for: ItemStatus.unknown))
                 }
             }
             .padding(.top, 2)
         }
         .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isHeader)
     }
 }
 
+/// Count + word, with the status glyph (shape + color, never color alone).
 struct CountBadge: View {
     let count: Int
     let label: String
     let color: Color
+    let symbol: String
 
     var body: some View {
         HStack(spacing: 4) {
-            Circle()
-                .fill(color)
-                .frame(width: 8, height: 8)
+            Image(systemName: symbol)
+                .font(.caption)
+                .foregroundStyle(color)
+                .accessibilityHidden(true)
             Text("\(count)")
                 .font(.subheadline.weight(.semibold).monospacedDigit())
             Text(label)
@@ -257,6 +266,7 @@ struct ItemRow: View {
             .multilineTextAlignment(.trailing)
         }
         .padding(.vertical, 4)
+        .accessibilityElement(children: .combine)
     }
 }
 

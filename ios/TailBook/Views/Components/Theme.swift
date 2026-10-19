@@ -8,6 +8,8 @@ enum Theme {
     static let statusYellow = Color("StatusYellow")
     static let statusRed = Color("StatusRed")
     static let panel = Color("PanelBackground")
+    /// Label color on accent-filled buttons (white in light, near-black in dark for AA contrast).
+    static let onAccent = Color("OnAccent")
 
     static func color(for status: ItemStatus) -> Color {
         switch status {
@@ -40,7 +42,7 @@ enum Theme {
 
     static func symbol(for summary: SummaryStatus) -> String {
         switch summary {
-        case .current: return "checkmark.seal.fill"
+        case .current: return "checkmark.circle.fill"
         case .limited: return "exclamationmark.triangle.fill"
         case .overdue: return "xmark.octagon.fill"
         case .incomplete: return "questionmark.circle.fill"

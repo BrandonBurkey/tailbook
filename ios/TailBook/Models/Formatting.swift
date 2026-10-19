@@ -129,7 +129,7 @@ extension Summary {
         switch status {
         case .current: return "Yes"
         case .overdue: return "No"
-        case .limited: return "Limited"
+        case .limited: return "Not all"
         case .incomplete: return "Can't tell yet"
         }
     }

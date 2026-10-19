@@ -62,7 +62,7 @@ struct TrackedItemsView: View {
                     ContentUnavailableView {
                         Label("No ADs or items yet", systemImage: "checklist")
                     } description: {
-                        Text("Add a recurring AD (with its method of compliance) or your own item, like a fire extinguisher inspection or a parachute repack.")
+                        Text("Add a recurring AD (with its method of compliance) or your own item, like a fire extinguisher inspection or a parachute repack. TailBook doesn't determine whether an AD applies to your aircraft; ask your A&P/IA.")
                     } actions: {
                         Button("Add AD") { newItemKind = .ad }
                             .buttonStyle(.borderedProminent)
@@ -76,7 +76,6 @@ struct TrackedItemsView: View {
                     ForEach(ads) { item in
                         trackedRow(item, result: result)
                     }
-                    .onDelete { offsets in delete(offsets, from: ads) }
                 } header: {
                     Text("Airworthiness Directives")
                 } footer: {
@@ -88,7 +87,6 @@ struct TrackedItemsView: View {
                     ForEach(customs) { item in
                         trackedRow(item, result: result)
                     }
-                    .onDelete { offsets in delete(offsets, from: customs) }
                 }
             }
         }
@@ -105,6 +103,7 @@ struct TrackedItemsView: View {
                         .foregroundStyle(Theme.color(for: evaluated.status))
                         .font(.title3)
                         .frame(width: 26)
+                        .accessibilityLabel(evaluated.statusLabel)
                 }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(item.displayName)

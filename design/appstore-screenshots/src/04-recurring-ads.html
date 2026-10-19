@@ -100,42 +100,77 @@ h1 em{font-style:normal;color:#7DBBFF}
 .note{display:flex;gap:10px;font-size:13.5px;line-height:1.4;color:var(--ink2);padding:12px 14px;background:var(--accentSoft);border-radius:12px}
 .note .ic{width:18px;height:18px;color:var(--accent);flex:none;margin-top:1px}
 </style></head>
-<body><div class="stage"><div class="copy"><div class="eyebrow"><i></i>Recurring ADs</div><h1>Hours or months,<br><em>whichever comes first.</em></h1><p class="sub">TailBook watches both clocks and projects the hours side from how much you fly.</p></div><div class="phone-wrap"><div class="phone"><div class="screen light"><div class="island"></div><div class="sbar"><span>9:41</span><span class="r">
+<body><div class="stage"><div class="copy"><div class="eyebrow"><i></i>Recurring ADs</div><h1>Hours or months,<br><em>whichever comes first.</em></h1><p class="sub">Enter both limits once. TailBook tracks each and shows you the one that comes due first.</p></div><div class="phone-wrap"><div class="phone"><div class="screen ios light"><div class="island"></div><div class="sbar"><span>9:41</span><span class="r">
   <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
   <svg viewBox="0 0 16 12"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0zM3.4 6.8a6.5 6.5 0 0 1 9.2 0l-1.4 1.4a4.5 4.5 0 0 0-6.4 0zM1 4.4a9.9 9.9 0 0 1 14 0l-1.4 1.4a7.9 7.9 0 0 0-11.2 0z" fill="currentColor"/></svg>
   <svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="23" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/><path d="M25 4v4a2 2 0 0 0 0-4z" fill="currentColor" opacity=".5"/></svg>
 </span></div><style>
-    .clock{padding:16px;position:relative}
-    .clock+.clock{border-top:1px solid var(--line)}
-    .clock .hd{display:flex;align-items:center;gap:8px;color:var(--ink2);font-size:14px;font-weight:600}
-    .clock .hd .ic{width:18px;height:18px;color:var(--ink3)}
-    .clock .big{display:flex;align-items:baseline;gap:8px;margin-top:6px}
-    .clock .big b{font-family:'Inter Display';font-size:36px;font-weight:700;letter-spacing:-.02em;font-feature-settings:"tnum"}
-    .bar{height:8px;border-radius:4px;background:var(--neutralBg);margin-top:10px;overflow:hidden}
-    .bar i{display:block;height:100%;border-radius:4px;background:var(--currentFill)}
-    .gov{position:absolute;right:16px;top:16px;font-family:'DejaVu Sans Mono';font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accentSoft);padding:3px 6px;border-radius:5px}
-  </style><div class="app">
-    <div class="navbar"><span class="back"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>ADs</span><span class="mid"></span><span class="act">Edit</span></div>
-    <div class="pad" style="margin-top:8px"><div style="display:flex;align-items:center;gap:10px"><span class="g st-ok"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5" fill="currentColor"/><path d="M7.2 12.4l3.2 3.2 6.4-6.8" fill="none" stroke="var(--knock)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="tag st-ok" style="font-size:11px;margin:0">Current</span></div>
-      <div class="mono" style="font-size:27px;font-weight:700;margin-top:10px;letter-spacing:-.01em">AD 2020-18-04</div>
-      <div style="font-size:15px;color:var(--ink2);margin-top:4px">Recurring inspection · every 100 hrs or 12 calendar months, whichever comes first</div></div>
-    <div class="sech">Two clocks</div>
-    <div class="pad"><div class="card">
-      <div class="clock"><span class="gov">Comes first</span><div class="hd"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>Calendar</div>
-        <div class="big"><b>104</b><span class="ov" style="font-size:12px">days left</span></div>
-        <div style="font-size:14px;color:var(--ink2)">Due by <b style="color:var(--ink)">Jan 31, 2027</b></div>
-        <div class="bar"><i style="width:73%"></i></div></div>
-      <div class="clock"><div class="hd"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.6 17.5a8.5 8.5 0 1 1 14.8 0"/><path d="m12 13 3.5-4.5"/><circle cx="12" cy="13.2" r="1.3"/></svg>Tach hours</div>
-        <div class="big"><b>39.6</b><span class="ov" style="font-size:12px">hrs left</span></div>
-        <div style="font-size:14px;color:var(--ink2)">Due at <b style="color:var(--ink)">1,290.0</b> tach · about Mar 18, 2027 at your pace</div>
-        <div class="bar"><i style="width:60%"></i></div></div>
-    </div></div>
-    <div class="sech">Compliance</div>
-    <div class="pad"><div class="card">
-      <div class="kv"><span class="k">Last done</span><span class="v">Jan 10, 2026 · 1,190.0</span></div>
-      <div class="kv"><span class="k">Method</span><span class="v">Inspection per AD ¶(g)</span></div>
-      <div class="kv"><span class="k">Logbook</span><span class="v" style="color:var(--accent)">Airframe p. 31 ›</span></div>
-    </div></div>
-    <div class="pad" style="margin-top:14px"><div class="note"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".5"/></svg><span>TailBook tracks the ADs you add. Your IA determines which ADs apply to your aircraft.</span></div></div>
-    <div class="tabbar"><div class="tab "><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="M7.5 8.5h1.5M7.5 12h1.5M7.5 15.5h1.5M11.5 8.5h5M11.5 12h5M11.5 15.5h5"/></svg><span>Board</span></div><div class="tab on"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.3 7.5 9.5 4.3-1.2 7.5-4.9 7.5-9.5V6z"/><path d="M12 8.5v4.5"/><circle cx="12" cy="16" r=".4"/></svg><span>ADs</span></div><div class="tab "><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4.5" width="14" height="17" rx="2.5"/><path d="M9 4.5V3.8a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v.7M8.5 10h1M8.5 13.5h1M8.5 17h1M12 10h3.5M12 13.5h3.5M12 17h3.5"/></svg><span>Squawks</span></div><div class="tab "><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><path d="M8 9h8M8 12h8M8 15h5"/></svg><span>Logbooks</span></div><div class="tab "><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg><span>Reports</span></div></div>
-  </div><div class="homebar"></div></div></div></div></div></body></html>
+.ios.light{--i-bg:#F2F2F7;--i-cell:#FFFFFF;--i-sep:#C6C6C8;--i-lab:#000000;--i-lab2:#8A8A8E;--i-lab3:#C4C4C7;--i-fill:rgba(120,120,128,.12);--i-bar:#F7F7F8;--i-barLine:rgba(0,0,0,.18);--i-tint:#1F5FD1;--i-onTint:#FFFFFF;--i-red:#A3142A;--i-yel:#8A5300;--i-grn:#0B6A52;} .ios.dark{--i-bg:#000000;--i-cell:#1C1C1E;--i-sep:#38383A;--i-lab:#FFFFFF;--i-lab2:#98989F;--i-lab3:#5A5A5E;--i-fill:rgba(118,118,128,.24);--i-bar:#161618;--i-barLine:rgba(255,255,255,.15);--i-tint:#5AA9FF;--i-onTint:#06121F;--i-red:#FF8A80;--i-yel:#FFC266;--i-grn:#6BE3BC;}
+.ios{background:var(--i-bg);color:var(--i-lab)}
+.ios .app{font-family:"Inter",system-ui,sans-serif;letter-spacing:-.012em}
+.ios .sbar{color:var(--i-lab)} .ios .homebar{background:var(--i-lab)}
+.ios .st-overdue{color:var(--i-red)} .ios .st-due_soon{color:var(--i-yel)} .ios .st-ok{color:var(--i-grn)}
+.ios .st-unknown,.ios .st-not_applicable{color:var(--i-lab2)}
+.inav{display:flex;align-items:center;justify-content:space-between;height:46px;padding:0 16px;position:relative}
+.inav .l,.inav .r{display:flex;align-items:center;gap:2px;color:var(--i-tint);font-size:17px;min-width:70px}
+.inav .r{justify-content:flex-end;font-weight:600}
+.inav .c{position:absolute;left:90px;right:90px;text-align:center;font-weight:600;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.inav .c small{display:block;font-size:11px;font-weight:400;color:var(--i-lab2);letter-spacing:0}
+.inav .ic{width:24px;height:24px}
+.scroll{position:absolute;left:0;right:0;top:100px;bottom:0;overflow:hidden}
+.sec{margin:0 16px}
+.sh{font-size:13px;color:var(--i-lab2);text-transform:uppercase;padding:18px 16px 7px;letter-spacing:0}
+.sf{font-size:13px;line-height:1.35;color:var(--i-lab2);padding:7px 16px 4px;letter-spacing:-.005em}
+.grp{background:var(--i-cell);border-radius:10px;overflow:hidden}
+.cell{display:flex;align-items:center;gap:12px;min-height:44px;padding:11px 16px;position:relative;font-size:17px}
+.cell+.cell::before{content:"";position:absolute;top:0;left:16px;right:0;height:.6px;background:var(--i-sep)}
+.cell.ind+.cell::before,.cell+.cell.ind::before{left:54px}
+.cell .grow{flex:1;min-width:0}
+.cell .k{flex:1} .cell .v{color:var(--i-lab2);font-feature-settings:"tnum"}
+.chev{width:14px;height:14px;color:var(--i-lab3);flex:none}
+.tl{color:var(--i-tint)}
+.tl .ic{width:22px;height:22px}
+.lab2{color:var(--i-lab2)}
+.pill{background:var(--i-fill);border-radius:7px;padding:6px 11px;font-size:17px;font-feature-settings:"tnum";white-space:nowrap}
+.bbtn{background:var(--i-fill);color:var(--i-tint);border-radius:8px;padding:6px 12px;font-size:15px;font-weight:500;white-space:nowrap}
+.pbtn{height:50px;border-radius:12px;background:var(--i-tint);color:var(--i-onTint);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:17px}
+.pbtn .ic{width:21px;height:21px}
+.botbar{position:absolute;left:0;right:0;padding:8px 16px;background:var(--i-bar);border-top:.6px solid var(--i-barLine);z-index:14;backdrop-filter:blur(20px)}
+.itabs{position:absolute;left:0;right:0;bottom:0;height:83px;display:flex;justify-content:space-around;padding:7px 4px 0;background:var(--i-bar);border-top:.6px solid var(--i-barLine);z-index:15}
+.itab{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:500;color:var(--i-lab2);width:80px;letter-spacing:0}
+.itab .ic{width:26px;height:26px}
+.itab.on{color:var(--i-tint)}
+.toggle{width:51px;height:31px;border-radius:16px;background:#34C759;position:relative;flex:none}
+.toggle::after{content:"";position:absolute;right:2px;top:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.seg{display:flex;background:var(--i-fill);border-radius:9px;padding:2px;font-size:14px;font-weight:500;width:100%}
+.seg span{flex:1;text-align:center;padding:6px 0;border-radius:7px}
+.seg span.on{background:var(--i-cell);box-shadow:0 2px 6px rgba(0,0,0,.14);font-weight:600}
+.dark .seg span.on{background:#636366}
+.updown{display:inline-flex;align-items:center;gap:4px;color:var(--i-lab2)}
+.updown svg{width:11px;height:15px}
+</style><style>.dimtop{position:absolute;left:0;right:0;top:0;height:120px;background:#000}
+    .behind{position:absolute;left:14px;right:14px;top:48px;height:60px;border-radius:12px 12px 0 0;background:#8E8E93;opacity:.55}
+    .esheet{position:absolute;left:0;right:0;top:60px;bottom:0;border-radius:12px 12px 0 0;background:var(--i-bg);overflow:hidden}
+    .ios .sbar{color:#fff}</style>
+  <div class="dimtop"></div><div class="behind"></div>
+  <div class="app" style="padding-top:0"><div class="esheet">
+    <div class="inav" style="margin-top:6px"><span class="l">Cancel</span><span class="c">Edit AD</span><span class="r">Save</span></div>
+    <div style="position:absolute;left:0;right:0;top:56px;bottom:0;overflow:hidden">
+      <div class="sh" style="padding-top:8px">Airworthiness Directive</div>
+      <div class="sec"><div class="grp"><div class="cell"><span style="font-family:'DejaVu Sans Mono';font-size:16px">2020-18-04</span></div><div class="cell">Recurring inspection</div></div></div>
+      <div class="sec" style="margin-top:22px"><div class="grp"><div class="cell"><div class="seg"><span class="on">Recurring</span><span>One-time</span></div></div>
+        <div class="cell"><span class="k">Applies to this aircraft</span><span class="toggle"></span></div></div></div>
+      <div class="sf">Applicability is your A&amp;P/IA’s determination. Turn it off to keep the AD on file as not applicable.</div>
+      <div class="sh">Interval</div>
+      <div class="sec"><div class="grp">
+        <div class="cell"><span class="k">Repeats by</span><span class="v" style="font-size:15px">Hours or time, whichever first</span><span class="updown"><svg viewBox="0 0 11 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5 5.5 2 9 5.5M2 9.5 5.5 13 9 9.5"/></svg></span></div>
+        <div class="cell"><span class="k">Every</span><span style="font-feature-settings:'tnum'">100.0</span><span class="lab2">hrs</span></div>
+        <div class="cell"><span class="k">Time unit</span><span class="v">Calendar months</span><span class="updown"><svg viewBox="0 0 11 15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5.5 5.5 2 9 5.5M2 9.5 5.5 13 9 9.5"/></svg></span></div>
+        <div class="cell"><span class="k">or every</span><span style="font-feature-settings:'tnum'">12</span><span class="lab2">calendar months</span></div></div></div>
+      <div class="sf">Hours are tach hours. Good through the last day of the month (e.g. done Mar 5 + 12 → Mar 31 next year). Due at whichever limit comes first.</div>
+      <div class="sh">Last complied with</div>
+      <div class="sec"><div class="grp">
+        <div class="cell" style="display:block;padding:10px 16px"><div style="display:flex;align-items:center;justify-content:space-between"><span>Last done</span><span class="pill">Jan 10, 2026</span></div><div style="font-size:12px;color:var(--i-tint);margin-top:8px">Don’t know yet</div></div>
+        <div class="cell"><span class="k">Tach when done</span><span style="font-feature-settings:'tnum'">1190.0</span></div></div></div>
+      <div class="sf">A whichever-first item needs both the date and the tach to show as current.</div>
+    </div></div></div><div class="homebar"></div></div></div></div></div></body></html>

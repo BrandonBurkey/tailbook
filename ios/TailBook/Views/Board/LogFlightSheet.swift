@@ -43,7 +43,7 @@ struct LogFlightSheet: View {
                 Section {
                     TextField("Tach", text: $tachText)
                         .keyboardType(.decimalPad)
-                        .font(.system(size: 44, weight: .semibold, design: .rounded).monospacedDigit())
+                        .font(.system(.largeTitle, design: .rounded, weight: .semibold).monospacedDigit())
                         .multilineTextAlignment(.center)
                         .focused($tachFocused)
                         .accessibilityLabel("New tach reading")
@@ -96,7 +96,7 @@ struct LogFlightSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") { save() }
-                        .disabled(newTach == nil)
+                        .disabled(newTach == nil || (hoursThisFlight ?? 0) < 0)
                 }
             }
             .onAppear {

@@ -9,6 +9,7 @@ struct SquawksView: View {
     @Environment(StoreService.self) private var store
     @State private var showNewSquawk = false
     @State private var editingSquawk: Squawk? = nil
+    @State private var squawkToDelete: Squawk? = nil
 
     var body: some View {
         Group {
@@ -65,10 +66,15 @@ struct SquawksView: View {
                                 } label: {
                                     Label("Close", systemImage: "checkmark")
                                 }
-                                .tint(Theme.statusGreen)
+                                .tint(Color.accentColor)
+                                Button {
+                                    squawkToDelete = squawk
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                                .tint(Theme.statusRed)
                             }
                     }
-                    .onDelete { offsets in delete(offsets, from: open) }
                 }
             }
             if !closed.isEmpty {
@@ -81,12 +87,36 @@ struct SquawksView: View {
                                 } label: {
                                     Label("Reopen", systemImage: "arrow.uturn.backward")
                                 }
+                                Button {
+                                    squawkToDelete = squawk
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                                .tint(Theme.statusRed)
                             }
                     }
-                    .onDelete { offsets in delete(offsets, from: closed) }
                 }
             }
         }
+        .confirmationDialog("Delete this squawk?", isPresented: deleteDialogBinding, titleVisibility: .visible) {
+            Button("Delete", role: .destructive) {
+                if let squawk = squawkToDelete {
+                    context.delete(squawk)
+                    try? context.save()
+                }
+                squawkToDelete = nil
+            }
+            Button("Cancel", role: .cancel) { squawkToDelete = nil }
+        }
+    }
+
+    private var deleteDialogBinding: Binding<Bool> {
+        Binding(
+            get: { squawkToDelete != nil },
+            set: { newValue in
+                if !newValue { squawkToDelete = nil }
+            }
+        )
     }
 
     private func row(_ squawk: Squawk) -> some View {
@@ -95,9 +125,10 @@ struct SquawksView: View {
         } label: {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: squawk.isOpen ? "exclamationmark.bubble" : "checkmark.bubble")
-                    .foregroundStyle(squawk.isOpen ? Theme.statusYellow : Color.secondary)
+                    .foregroundStyle(squawk.isOpen ? Color.accentColor : Color.secondary)
                     .font(.title3)
                     .frame(width: 26)
+                    .accessibilityLabel(squawk.isOpen ? "Open" : "Closed")
                 VStack(alignment: .leading, spacing: 2) {
                     Text(squawk.title)
                         .font(.headline)
