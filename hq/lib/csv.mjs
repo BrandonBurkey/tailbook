@@ -70,6 +70,16 @@ export function verdict(value, pass, fail) {
   return 'between';
 }
 
+// Before the deadline, a low number isn't a failure yet: judge it against
+// the week's planned pace instead.
+export function interimVerdict(final, latest, m, deadline, today) {
+  if (final === 'nodata' || final === 'pass' || !deadline || today > deadline) return final;
+  const wk = m.weeks.find((w) => w.week === latest.week);
+  const target = parseNumber(String(wk?.target || '').replace(/\+$/, '').split(' ')[0]);
+  if (target != null && !m.percent) return latest.value >= target ? 'onpace' : 'behind';
+  return final === 'fail' ? 'behind' : 'progress';
+}
+
 export function buildMetrics(text, today = new Date().toISOString().slice(0, 10)) {
   const rows = parseCsv(text);
   const header = rows[0];
@@ -116,7 +126,10 @@ export function buildMetrics(text, today = new Date().toISOString().slice(0, 10)
         const v = parseNumber(w.actualCumulative) ?? parseNumber(w.actualWeek);
         if (v != null) latest = { value: v, week: w.week };
       }
-      return { ...m, latest, verdict: verdict(latest?.value ?? null, m.pass, m.fail) };
+      const final = verdict(latest?.value ?? null, m.pass, m.fail);
+      const deadline = (String(m.passText).match(/by (\d{4}-\d{2}-\d{2})/) || [])[1] ||
+        m.weeks.map((w) => w.end).filter(Boolean).sort().pop() || null;
+      return { ...m, latest, deadline, finalVerdict: final, verdict: interimVerdict(final, latest, m, deadline, today) };
     });
     const main = (ex.main && metrics.find((m) => m.metric === ex.main)) || metrics.find((m) => !m.postBuild && m.pass) || metrics[0] || null;
     const anyData = metrics.some((m) => m.latest);

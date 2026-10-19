@@ -1,0 +1,86 @@
+{
+  "identifier" : "6F3B8E2A-4C1D-4E6B-9A57-2D0C5B1E7A10",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "21500001",
+      "localizations" : [
+
+      ],
+      "name" : "TailBook Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "199.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "6740000001",
+          "introductoryOffer" : {
+            "internalID" : "6740000011",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P2W"
+          },
+          "localizations" : [
+            {
+              "description" : "Edit, ADs, reminders, PDFs, tach log, multiple aircraft.",
+              "displayName" : "TailBook Pro Annual",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.tailbook.pro.annual",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "TailBook Pro Annual",
+          "subscriptionGroupID" : "21500001",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "24.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "6740000002",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Edit, ADs, reminders, PDFs, tach log, multiple aircraft.",
+              "displayName" : "TailBook Pro Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.tailbook.pro.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "TailBook Pro Monthly",
+          "subscriptionGroupID" : "21500001",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

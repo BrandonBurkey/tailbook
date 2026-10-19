@@ -97,7 +97,7 @@ Extends the forum scheme in `01-forum-posts.md` (`utm_medium=forum`, `utm_campai
 |---|---|---|
 | `utm_source` | **Paid:** `google`, `meta` · **Organic social:** `youtube`, `instagram`, `x`, `linkedin`, `fb-{group}` · **Forums (existing):** `mooneyspace`, `poa`, `beechtalk`, `copa`, `bcp`, `rflying`, `raviation` · **Partners:** `pod-{show}`, `yt-{creator}`, `news-{outlet}`, `club-{club}`, `shop-{shopname}` · **Email:** `mailerlite` (or `kit`) | `google`, `fb-c182owners`, `pod-aviationnewstalk` |
 | `utm_medium` | `cpc` (Google), `paid-social` (Meta), `social`, `forum`, `email`, `podcast`, `video`, `newsletter`, `press`, `partner`, `qr` (printed counter cards) | `cpc` |
-| `utm_campaign` | `e1` (forum test), `organic-w{1-8}`, `paid-p{1|2}-{yyyymm}`, `club-{club}`, `launch-{yyyymm}` | `paid-p1-202612` |
+| `utm_campaign` | `e1` (forum test), `organic-w{1-8}`, `paid-p{1|2}-{yyyymm}`, `club-{club}`, `creator-outreach`, `launch-{yyyymm}` | `paid-p1-202612` |
 | `utm_content` | Ad ID `g01`–`g10`, `m01`–`m10`; script `s01`–`s15`; forum `a`/`b`; `bio`; `li`; `thread` | `g03` |
 | `utm_term` | Google only: `{keyword}` (ValueTrack, inserted automatically) | `transponder+check+due` |
 

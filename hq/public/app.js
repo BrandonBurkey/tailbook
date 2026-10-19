@@ -33,7 +33,11 @@
 
   function prettyName(file) {
     const base = file.replace(/\.[^.]+$/, '').replace(/^\d+[-_ ]+/, '').replace(/[-_]+/g, ' ').trim();
-    return base ? base[0].toUpperCase() + base.slice(1) : file;
+    if (!base) return file;
+    const ACR = { ios: 'iOS', ux: 'UX', ui: 'UI', crm: 'CRM', sop: 'SOP', faq: 'FAQ', b2b: 'B2B', seo: 'SEO', ia: 'IA', appstore: 'App Store', utm: 'UTM' };
+    const words = base.toLowerCase().split(' ').map((w) => ACR[w] || w);
+    const out = words.join(' ');
+    return out[0].toUpperCase() + out.slice(1);
   }
   const niceThreshold = (t) => String(t || '')
     .replace(/>=/g, '≥').replace(/<=/g, '≤')
@@ -380,7 +384,7 @@
 
   // ---------- Metrics ----------
   const fmtVal = (v, pct) => (v == null ? '—' : `${Number.isInteger(v) ? v : v.toFixed(1)}${pct ? '%' : ''}`);
-  const VERDICT = { pass: 'On track', between: 'Watch zone', fail: 'Below the line', nodata: 'No data yet', later: 'After launch' };
+  const VERDICT = { pass: 'Passing', between: 'Watch zone', fail: 'Below the line', nodata: 'No data yet', later: 'After launch', onpace: 'On pace', behind: 'Behind pace', progress: 'In progress' };
 
   function meter(m) {
     const pass = m.pass && m.pass.op.startsWith('>') ? m.pass.value : null;
@@ -422,16 +426,16 @@
         <span class="pill ${esc(verdict)}">${VERDICT[verdict]}</span>
       </div>
       <div class="exp-main">
-        <div class="label">${esc(main.metric)}${main.proxy ? ' · proxy' : ''}</div>
+        <div class="label">${esc(main.metric.replace('->', '→'))}${main.proxy ? ' · proxy' : ''}</div>
         <div class="exp-figure">
-          <div class="val ${v == null ? 'empty' : ''}">${v == null ? '—' : esc(fmtVal(v, main.percent))}${v == null ? '<small>no data yet</small>' : ''}</div>
+          <div class="val ${v == null ? 'empty' : ''}">${v == null ? 'No data yet' : esc(fmtVal(v, main.percent))}</div>
           ${main.pass ? `<div class="goal">Target <b>${esc(main.pass.op === '>=' ? '≥' : main.pass.op)}${esc(fmtVal(main.pass.value, main.pass.percent))}</b></div>` : ''}
         </div>
         ${meter(main)}
         <div class="exp-rule"><span><b>Pass</b> ${esc(niceThreshold(main.passText))}</span>${main.failText && !/^n\/a/i.test(main.failText) ? `<span><b>Fail</b> ${esc(niceThreshold(main.failText))}</span>` : ''}</div>
       </div>
       ${others.length ? `<div class="sub-metrics">${others.map((m) => `<div class="sub-metric">
-        <div class="nm">${esc(m.metric)}${m.proxy ? '<span class="tag">proxy</span>' : ''}${m.postBuild ? '<span class="tag">after launch</span>' : ''}<span class="tg">Pass ${esc(niceThreshold(m.passText))}</span></div>
+        <div class="nm">${esc(m.metric.replace('->', '→'))}${m.proxy ? '<span class="tag">proxy</span>' : ''}${m.postBuild ? '<span class="tag">after launch</span>' : ''}<span class="tg">Pass ${esc(niceThreshold(m.passText))}</span></div>
         <div class="av">${esc(m.postBuild ? '—' : fmtVal(m.latest?.value ?? null, m.percent))}<span class="dot ${m.postBuild ? '' : esc(m.verdict)}"></span></div>
       </div>`).join('')}</div>` : ''}
       <div class="when">${icon('calendar')}${esc(ex.when)}</div>
@@ -484,8 +488,8 @@
         <div class="entry-row head"><div>${esc(wk ? `${shortDate(wk.start)} – ${shortDate(wk.end)}` : '')}</div><div>This week</div><div>Total so far</div></div>
         ${rows.map(({ ex, met, w }) => `<div class="entry-row" data-row="${w.row}">
           <div class="entry-name"><span class="exp-badge">${esc(ex.id)}</span>${esc(met.metric)}<div class="entry-hint">${esc(hint(w, met))}${met.percent ? ' · enter a %' : ''}</div></div>
-          <div class="field"><label for="f-${w.row}-w">This week</label><input id="f-${w.row}-w" inputmode="decimal" autocomplete="off" placeholder="${met.percent ? '0%' : '0'}" data-row="${w.row}" data-col="actual_week" data-orig="${esc(w.actualWeek)}" value="${esc(draft(w.row, 'actual_week', w.actualWeek))}" aria-label="${esc(met.metric)}, this week"></div>
-          <div class="field"><label for="f-${w.row}-c">Total so far</label><input id="f-${w.row}-c" inputmode="decimal" autocomplete="off" placeholder="${met.percent ? '0%' : '0'}" data-row="${w.row}" data-col="actual_cumulative" data-orig="${esc(w.actualCumulative)}" value="${esc(draft(w.row, 'actual_cumulative', w.actualCumulative))}" aria-label="${esc(met.metric)}, total so far"></div>
+          <div class="field"><label for="f-${w.row}-w">This week</label><input id="f-${w.row}-w" inputmode="decimal" autocomplete="off" placeholder="—" data-row="${w.row}" data-col="actual_week" data-orig="${esc(w.actualWeek)}" value="${esc(draft(w.row, 'actual_week', w.actualWeek))}" aria-label="${esc(met.metric)}, this week"></div>
+          <div class="field"><label for="f-${w.row}-c">Total so far</label><input id="f-${w.row}-c" inputmode="decimal" autocomplete="off" placeholder="—" data-row="${w.row}" data-col="actual_cumulative" data-orig="${esc(w.actualCumulative)}" value="${esc(draft(w.row, 'actual_cumulative', w.actualCumulative))}" aria-label="${esc(met.metric)}, total so far"></div>
         </div>`).join('')}
         <div class="entry-foot"><span class="msg" id="entry-msg">Numbers only, like 12, 4.5 or 15%. Leave blank if you don’t know yet.</span>
           <button class="btn primary" type="submit" id="entry-save">${icon('save')}Save numbers</button></div>
