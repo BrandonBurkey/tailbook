@@ -1,6 +1,6 @@
 # TailBook
 
-The "always-airworthy" status board and logbook vault for US Part 91 aircraft owners. The spec is `research/market-research.md` (§0, §4.1, §5).
+The "always-ahead" due-date status board and logbook vault for US Part 91 aircraft owners. The spec is `research/market-research.md` (§0, §4.1, §5).
 
 Following "validate, then build", this repo holds the **due-date rules engine** (the core IP the SwiftUI app will be ported from) and the **validation landing page**. The landing page's free Airworthiness Due-Date Checker gives visitors the app's aha moment in the browser and captures Founding Owner sign-ups.
 
