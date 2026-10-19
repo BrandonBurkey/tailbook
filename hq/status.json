@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-19T21:19:32.072Z",
+  "updatedAt": "2026-10-19T21:44:11.595Z",
   "updatedBy": "lead",
   "headline": "Research, the competitor check and the validation kit are done, and the web checker is built and tested. The iOS app is being built now. This week is your setup week, so the forum posts can start on Mon Oct 26.",
   "phases": [
@@ -110,13 +110,13 @@
       "id": "design",
       "name": "UI/UX",
       "role": "Design system and visuals",
-      "status": "working",
+      "status": "done",
       "folders": [
         "design"
       ],
-      "task": "Reviewing the iOS screens and matching App Store screenshots to the real app",
-      "next": "Review the iOS screens and match App Store screenshots to the real app",
-      "updatedAt": "2026-10-19T21:19:32.072Z"
+      "task": "iOS UX review done (26 of 37 fixes; CI green). App Store screenshots now match the real app.",
+      "next": "Founder: replace mockups with real simulator screenshots before submitting",
+      "updatedAt": "2026-10-19T21:44:11.595Z"
     },
     {
       "id": "marketing",
