@@ -1,0 +1,57 @@
+record_type,id,organization,segment,stage,win_probability,decision_maker_role,contact_channel,est_aircraft_reach,offer_proposed,deal_structure,partner_code_or_utm,first_touch_date,last_touch_date,next_action,next_action_date,touches_sent,deposits_attributed,paid_aircraft_attributed,payout_owed_usd,week_start,week_end,tgt_new_orgs_contacted,tgt_touches_sent,tgt_calls_held,tgt_agreements_signed,tgt_partner_deposits_aircraft,tgt_cum_partner_deposits_aircraft,notes
+STAGE,S0,,,Target,0%,,,,,,,,,,,,,,,,,,,,,,,Org is on targets.csv with website and segment; not yet researched
+STAGE,S1,,,Researched,5%,,,,,,,,,,,,,,,,,,,,,,,Decision-maker ROLE identified from a public page; contact path confirmed; angle chosen. Exit: first touch sent
+STAGE,S2,,,Contacted,10%,,,,,,,,,,,,,,,,,,,,,,,Touch 1 sent (email/form/call). Exit: any reply. After Touch 3 with no reply -> S9 Nurture
+STAGE,S3,,,Engaged,20%,,,,,,,,,,,,,,,,,,,,,,,Replied or agreed to talk. Exit: 15-min call held
+STAGE,S4,,,Call held,35%,,,,,,,,,,,,,,,,,,,,,,,Discovery done; their pain in their words logged in notes. Exit: written proposal (one-pager + offer from pricing-and-offers.md) sent
+STAGE,S5,,,Proposal sent,50%,,,,,,,,,,,,,,,,,,,,,,,"Offer, codes/UTM, payout terms sent. Exit: verbal yes + dated next step"
+STAGE,S6,,,Agreed,75%,,,,,,,,,,,,,,,,,,,,,,,Partner letter signed (pricing-and-offers.md §10) or article accepted with run date; codes/UTM issued. Exit: first member deposit/redemption
+STAGE,S7,,,Live,90%,,,,,,,,,,,,,,,,,,,,,,,Article published / counter cards placed / club deposits in. Track deposits_attributed weekly
+STAGE,S8,,,Producing,100%,,,,,,,,,,,,,,,,,,,,,,,10+ attributed deposits or paid aircraft; payouts running quarterly
+STAGE,S9,,,Nurture,—,,,,,,,,,,,,,,,,,,,,,,,No reply after 3 touches or 'not now'. Re-contact after launch with proof numbers only
+STAGE,SX,,,Lost,0%,,,,,,,,,,,,,,,,,,,,,,,Explicit no. Log the reason in notes (counts toward objection tallies)
+FIELD,record_type,,,,,,,,,,,,,,,,,,,,,,,,,,,STAGE | FIELD | TARGET | DEAL
+FIELD,id,,,,,,,,,,,,,,,,,,,,,,,,,,,DEAL: D### ; matches targets.csv id in notes when applicable
+FIELD,organization,,,,,,,,,,,,,,,,,,,,,,,,,,,Organization name exactly as on targets.csv
+FIELD,segment,,,,,,,,,,,,,,,,,,,,,,,,,,,type_club | flying_club | flying_club_network | ap_ia_shop | shop_network | aircraft_broker | aircraft_marketplace | insurance | flight_school | flight_school_network | club_software | school_software | appraisal
+FIELD,stage,,,,,,,,,,,,,,,,,,,,,,,,,,,S0–S9/SX per STAGE rows
+FIELD,win_probability,,,,,,,,,,,,,,,,,,,,,,,,,,,From stage; used for weighted pipeline = est_aircraft_reach × probability × expected uptake
+FIELD,decision_maker_role,,,,,,,,,,,,,,,,,,,,,,,,,,,ROLE TITLE only (e.g. 'Executive director'); no invented names. A name may be added only if published by the org
+FIELD,contact_channel,,,,,,,,,,,,,,,,,,,,,,,,,,,Public contact form / published general email / phone / in person / forum DM
+FIELD,est_aircraft_reach,,,,,,,,,,,,,,,,,,,,,,,,,,,Members or aircraft the partner can reach (label estimates)
+FIELD,offer_proposed,,,,,,,,,,,,,,,,,,,,,,,,,,,"Which offer from pricing-and-offers.md (club §2, flying club §3, shop §4, broker §5, insurance §6)"
+FIELD,deal_structure,,,,,,,,,,,,,,,,,,,,,,,,,,,Rev share % / referral credit / sponsorship / content only
+FIELD,partner_code_or_utm,,,,,,,,,,,,,,,,,,,,,,,,,,,Pre-launch ?src= slug; post-launch Apple custom code name
+FIELD,first_touch_date / last_touch_date,,,,,,,,,,,,,,,,,,,,,,,,,,,YYYY-MM-DD
+FIELD,next_action / next_action_date,,,,,,,,,,,,,,,,,,,,,,,,,,,Always one dated next step; no row without one unless S9/SX
+FIELD,touches_sent,,,,,,,,,,,,,,,,,,,,,,,,,,,Count; max 3 cold touches before S9
+FIELD,deposits_attributed,,,,,,,,,,,,,,,,,,,,,,,,,,,Stripe deposits with matching src (aircraft count); refunded ones excluded and noted
+FIELD,paid_aircraft_attributed,,,,,,,,,,,,,,,,,,,,,,,,,,,Post-launch code redemptions converted to paid
+FIELD,payout_owed_usd,,,,,,,,,,,,,,,,,,,,,,,,,,,Computed quarterly per pricing-and-offers.md; zero on refunds
+FIELD,week_start / week_end / tgt_*,,,,,,,,,,,,,,,,,,,,,,,,,,,TARGET rows only: weekly partner-channel targets
+FIELD,notes,,,,,,,,,,,,,,,,,,,,,,,,,,,"Pain quotes, objections (tag e.g. OBJ:shop-handles-it, OBJ:privacy), verification status"
+TARGET,W1,,,,,,,,,,,,,,,,,,,2026-10-19,2026-10-25,5,5,1,0,0,0,Verify targets.csv 'verify' rows; join COPA ($95); confirm MAPA status; call 5 nearest shops (in person if possible)
+TARGET,W2,,,,,,,,,,,,,,,,,,,2026-10-26,2026-11-01,12,15,2,0,0,0,"Type-club outreach week (04-emails §7): COPA, ABS, CPA, POS, MAPA/MooneySpace + 4 smaller clubs; 3 more shops"
+TARGET,W3,,,,,,,,,,,,,,,,,,,2026-11-02,2026-11-08,12,25,3,1,1,1,Flying clubs batch 1 (8) via AOPA network/club sites; 4 shops (warm intros from Snapshots); club touch 2s
+TARGET,W4,,,,,,,,,,,,,,,,,,,2026-11-09,2026-11-15,10,28,3,1,2,3,"Flying clubs batch 2 (8) + 2 brokers. Sun Nov 15 = E1 checkpoint: if MIDDLE, decision rules call for club newsletters + guest article + 3 local shops (this plan)"
+TARGET,W5,,,,,,,,,,,,,,,,,,,2026-11-16,2026-11-22,10,30,3,2,3,6,"Flying clubs batch 3 (6) + insurance content pitches (BWI, Avemco) + 2 shops; push for 1 type-club article/offer agreement"
+TARGET,W6,,,,,,,,,,,,,,,,,,,2026-11-23,2026-11-29,4,15,1,1,3,9,Thanksgiving week: lighter; follow-ups only + counter-card drops
+TARGET,W7,,,,,,,,,,,,,,,,,,,2026-11-30,2026-12-06,5,20,3,1,4,13,Touch 3s; close club deposits (Founding Club Plan); annual-season hook
+TARGET,W8,,,,,,,,,,,,,,,,,,,2026-12-07,2026-12-13,2,15,2,1,5,18,Dec 7 last-call email (04-emails §5) to partner leads too; numbers FREEZE Sun Dec 13
+TARGET,W9,,,,,,,,,,,,,,,,,,,2026-12-14,2026-12-15,0,0,0,0,0,18,"Decision Tue Dec 15. Report: club agreements (tiebreaker), # flying clubs depositing (pivot-A signal: pass >=5, fail <2), shops agreeing (variant: pass >=3)"
+TARGET,TOTAL,,,,,,,,,,,,,,,,,,,2026-10-19,2026-12-15,60,153,18,7,18,18,"Agreements = >=1 type club (article or member offer), >=3 shops, >=1 broker, >=1 insurance content, >=1 club network. Partner deposits are logged with source=partner:<org> and reported separately from the Snapshot-based E2 rate"
+DEAL,D001,Cirrus Owners & Pilots Association (COPA),type_club,S1,,Executive director / magazine editor,Website contact; COPA forum after joining,"7,000+ members",Club §2,15% rev share or sponsorship; article,src=copa,,,Join COPA; send 04-emails §7 COPA variant,2026-10-27,0,0,0,0,,,,,,,,,targets.csv T01
+DEAL,D002,American Bonanza Society (ABS),type_club,S1,,Executive director / ABS Magazine editor,Website contact,Thousands (est.),Club §2,15% rev share; article + AD-tracker input,src=abs,,,Send 04-emails §7 ABS variant,2026-10-27,0,0,0,0,,,,,,,,,targets.csv T02
+DEAL,D003,Cessna Pilots Association (CPA),type_club,S1,,Executive director / editor,Website contact,Large (est.),Club §2,15% rev share; article,src=cpa,,,Send 04-emails §7 CPA variant,2026-10-28,0,0,0,0,,,,,,,,,targets.csv T03
+DEAL,D004,Piper Owner Society (POS),type_club,S1,,Publisher/editor; membership manager,Website contact,Large (est.),Club §2 + partnership angle,15% rev share; article,src=pos,,,Send 04-emails §7 POS variant (partnership lead),2026-10-28,0,0,0,0,,,,,,,,,targets.csv T04
+DEAL,D005,MAPA / MAPA Safety Foundation,type_club,S0,,Executive director or foundation chair,Website contact (verify active),Unknown,Club §2,Content only until status confirmed,src=mapa,,,Confirm MAPA is active before paying dues; else route via MooneySpace,2026-10-23,0,0,0,0,,,,,,,,,targets.csv T05
+DEAL,D006,AOPA Flying Club Network,flying_club_network,S1,,Flying-club program manager,Website contact; newsletter submission,400+ clubs,Content + Founding Club Plan,Content only,src=aopa-fcn,,,Pitch Club Spotlight-style article on tach logging + 100-hr rule,2026-11-03,0,0,0,0,,,,,,,,,targets.csv T16
+DEAL,D007,West Valley Flying Club,flying_club,S1,,General manager / maintenance director,Website contact,~80 aircraft (2009 figure),Flying club §3 (10+ tier),Per-aircraft founding + fleet template build,src=wvfc,,,Verify site/fleet; send flying-club Touch 1,2026-11-03,0,0,0,0,,,,,,,,,targets.csv T18
+DEAL,D008,Wings of Carolina Flying Club,flying_club,S1,,Board president / maintenance officer,Website contact,"~12 aircraft, 400+ members",Flying club §3 (10+ tier),Per-aircraft founding + fleet template build,src=woc,,,Send flying-club Touch 1,2026-11-03,0,0,0,0,,,,,,,,,targets.csv T19
+DEAL,D009,RPM Aircraft Services,ap_ia_shop,S1,,Owner / director of maintenance (IA),Phone then website contact,Mooney/Bonanza/PA-30 customers,Shop §4,$25 referral credit; counter cards,src=shop-rpm,,,Call; offer sample Annual Work Order review,2026-10-22,0,0,0,0,,,,,,,,,targets.csv T34
+DEAL,D010,Wisconsin Aviation,ap_ia_shop,S1,,Director of maintenance; sales manager,Phone/website,Multi-site FBO/shop/school,Shop §4 + broker §5,Referral credit + seller codes,src=shop-wiav,,,Call DOM; secondary pitch to sales,2026-10-22,0,0,0,0,,,,,,,,,targets.csv T38
+DEAL,D011,Aerista,aircraft_broker,S1,,Head of sales / marketing,Website contact,High transaction volume (self-reported),Broker §5,50% net year-one capped $50/aircraft,src=aerista,,,Send broker Touch 1 with sample Status Report,2026-11-10,0,0,0,0,,,,,,,,,targets.csv T43
+DEAL,D012,Carolina Aircraft,aircraft_broker,S0,,Principal / sales manager,Website contact (verify domain),Bonanza/Baron specialist,Broker §5,50% net year-one capped $50/aircraft,src=carolina,,,Verify domain; pair with ABS angle,2026-11-10,0,0,0,0,,,,,,,,,targets.csv T46
+DEAL,D013,BWI Aviation Insurance,insurance,S1,,Marketing lead / principal,Website contact,National piston book,Insurance §6 (content only),Content only,src=bwi,,,Send insurance Touch 1 + article draft,2026-11-17,0,0,0,0,,,,,,,,,targets.csv T53
+DEAL,D014,Avemco Insurance Company,insurance,S1,,Safety programs / marketing manager,Website contact; PIREP blog,Large piston base,Insurance §6 (content placement),Content only,src=avemco,,,Pitch owner-education piece for PIREP blog,2026-11-17,0,0,0,0,,,,,,,,,targets.csv T52
+DEAL,D015,Sarasota Avionics,ap_ia_shop,S1,,General manager / service manager,Phone then website,Cirrus/Mooney + avionics customers,Shop §4 (avionics angle),$25 referral credit,src=shop-sarasota,,,Call: 91.411/91.413 reminder angle,2026-10-29,0,0,0,0,,,,,,,,,targets.csv T35

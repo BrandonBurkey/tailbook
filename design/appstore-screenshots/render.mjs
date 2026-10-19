@@ -154,7 +154,9 @@ h1 em{font-style:normal;color:#7DBBFF}
 .hero-main{display:flex;gap:14px;padding:16px 16px 14px}
 .hero-main .g{width:44px;height:44px}
 .answer{font-family:"Inter Display","Inter";font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.05;margin-top:3px}
-.headline{font-size:14.5px;color:var(--ink2);margin-top:5px;line-height:1.35}
+.headline{font-size:14.5px;color:var(--ink2);margin-top:5px;line-height:1.35;text-wrap:pretty}
+.logbtn{height:36px;padding:0 14px 0 10px;border-radius:18px;background:var(--accent);color:var(--onAccent);display:flex;align-items:center;gap:5px;font-weight:600;font-size:15px}
+.logbtn .ic{width:17px;height:17px}
 .strip{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;background:var(--surface2);border-top:1px solid var(--line)}
 .strip .v{font-size:15px;font-weight:600;margin-top:2px}
 .counts{display:flex;gap:10px;font-size:15px;color:var(--ink2);font-weight:500}
@@ -178,7 +180,7 @@ h1 em{font-style:normal;color:#7DBBFF}
 .vl.st-overdue{color:var(--overdue)} .vl.st-due_soon{color:var(--dueSoon)} .vl.st-ok{color:var(--ink)}
 .na .nm{color:var(--ink3)}
 .tabbar{position:absolute;left:0;right:0;bottom:0;height:86px;display:flex;justify-content:space-around;padding:8px 6px 0;
-  background:color-mix(in srgb,var(--surface) 94%,transparent);border-top:1px solid var(--line);z-index:15}
+  background:var(--surface);border-top:1px solid var(--line);z-index:15}
 .tab{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:var(--ink3);width:72px}
 .tab .ic{width:25px;height:25px}
 .tab.on{color:var(--accent)}
@@ -225,7 +227,7 @@ function heroCard(s = S) {
   return `<div class="card hero">
     <div class="hero-main">${glyph(SUM_GLYPH[s.status])}
       <div><div class="ov">All items current?</div><div class="answer" style="color:${SUM_TEXT[s.status]}">${ANSWER[s.status]}</div>
-      <div class="headline">${s.headline}</div></div></div>
+      <div class="headline">${s.headline.replace(/(\d) /g, '$1&nbsp;')}</div></div></div>
     <div class="strip"><div><div class="ov">Next due</div><div class="v">${s.nextDue.name} in ${s.nextDue.daysRemaining} days</div></div>
       <div class="counts"><span>${glyph('overdue')}${s.counts.overdue}</span><span>${glyph('due_soon')}${s.counts.due_soon}</span><span>${glyph('ok')}${s.counts.ok}</span></div></div>
     <div class="disc">${SHORT_DISC}</div></div>`;
@@ -240,13 +242,12 @@ const shots = [];
   const current = rows.filter((r) => r.status === 'ok').slice(0, 3);
   const inner = `<div class="app">
     <div class="nav"><div><div class="t">N731TB ${icon('chevD', 'ic', 2.4)}</div><div class="s">Beechcraft A36 · IFR · Oct 19, 2026</div></div>
-      <div class="btns"><div class="cbtn">${icon('share')}</div><div class="cbtn">${icon('gear')}</div></div></div>
+      <div class="btns"><div class="cbtn">${icon('gear')}</div><div class="logbtn">${icon('plus', 'ic', 2.6)}Log flight</div></div></div>
     <div class="pad">${heroCard()}</div>
     <div class="sech">Needs attention</div>
     <div class="pad"><div class="card">${attention.map(rowHtml).join('')}</div></div>
     <div class="sech">Current</div>
     <div class="pad"><div class="card">${current.map(rowHtml).join('')}</div></div>
-    <div class="fab">${icon('plus', 'ic', 2.4)}Log flight</div>
     ${tabbar('Board')}</div>`;
   shots.push({ file: '01-status-board', title: 'Status board', copy: { eyebrow: 'Status board', h1: 'All items current?<br><em>Know in two seconds.</em>', sub: 'Inspections, checks and recurring ADs on one red, yellow and green board, worst first.' }, mode: 'light', inner });
 }
@@ -281,7 +282,12 @@ const shots = [];
         ${[14, 22, 30, 38, 46, 54].map((y) => `<i style="position:absolute;left:7px;right:${y % 16 ? 9 : 16}px;top:${y}px;height:1.5px;background:#7A6E5A;opacity:.55"></i>`).join('')}</div>
       <div style="flex:1"><div style="font-weight:600;font-size:15.5px">Avionics logbook, p. 14</div><div style="font-size:13px;color:var(--ink3);margin-top:2px">Scanned Oct 2, 2026 · text searchable</div></div>
       <span style="color:var(--ink3)">${icon('chevR', 'ic')}</span></div></div>
-    <div class="pad" style="position:absolute;left:0;right:0;bottom:34px"><div class="btn">${icon('check', 'ic', 2.4)}Log done</div></div>
+    <div class="sech">History</div>
+    <div class="pad"><div class="card">
+      <div class="kv"><span class="k">Oct 18, 2024</span><span class="v" style="font-weight:500">Tested, appendix F</span></div>
+      <div class="kv"><span class="k">Oct 3, 2022</span><span class="v" style="font-weight:500">Tested, appendix F</span></div>
+    </div></div>
+    <div class="pad" style="position:absolute;left:0;right:0;bottom:0;padding-top:28px;padding-bottom:34px;background:linear-gradient(to bottom,transparent,var(--canvas) 34%)"><div class="btn">${icon('check', 'ic', 2.4)}Log done</div></div>
   </div>`;
   shots.push({ file: '02-far-citations', title: 'FAR citations', copy: { eyebrow: 'Show your work', h1: 'Every item cites<br><em>its FAR.</em>', sub: 'Tap any item for the rule, the math and the logbook page behind it.' }, mode: 'light', inner });
 }
@@ -339,13 +345,13 @@ const shots = [];
     .clock .hd{display:flex;align-items:center;gap:8px;color:var(--ink2);font-size:14px;font-weight:600}
     .clock .hd .ic{width:18px;height:18px;color:var(--ink3)}
     .clock .big{display:flex;align-items:baseline;gap:8px;margin-top:6px}
-    .clock .big b{font-family:'Inter Display';font-size:34px;font-weight:700;letter-spacing:-.02em;font-feature-settings:"tnum"}
+    .clock .big b{font-family:'Inter Display';font-size:36px;font-weight:700;letter-spacing:-.02em;font-feature-settings:"tnum"}
     .bar{height:8px;border-radius:4px;background:var(--neutralBg);margin-top:10px;overflow:hidden}
     .bar i{display:block;height:100%;border-radius:4px;background:var(--currentFill)}
     .gov{position:absolute;right:16px;top:16px;font-family:'DejaVu Sans Mono';font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accentSoft);padding:3px 6px;border-radius:5px}
   </style><div class="app">
     <div class="navbar"><span class="back">${icon('chevL', 'ic', 2.4)}ADs</span><span class="mid"></span><span class="act">Edit</span></div>
-    <div class="pad"><div style="display:flex;align-items:center;gap:10px">${glyph('ok')}<span class="tag st-ok" style="font-size:11px;margin:0">Current</span></div>
+    <div class="pad" style="margin-top:8px"><div style="display:flex;align-items:center;gap:10px">${glyph('ok')}<span class="tag st-ok" style="font-size:11px;margin:0">Current</span></div>
       <div class="mono" style="font-size:27px;font-weight:700;margin-top:10px;letter-spacing:-.01em">AD 2020-18-04</div>
       <div style="font-size:15px;color:var(--ink2);margin-top:4px">Recurring inspection · every 100 hrs or 12 calendar months, whichever comes first</div></div>
     <div class="sech">Two clocks</div>
@@ -398,7 +404,8 @@ const shots = [];
     <div class="sheet"><div class="grab"></div>
       <div style="display:flex;justify-content:space-between;align-items:center"><span style="color:var(--accent);font-size:17px">Cancel</span><span style="font-weight:650;font-size:17px">Log flight</span><span style="width:52px"></span></div>
       <div class="field"><div style="display:flex;justify-content:space-between"><span class="ov">Tach now</span><span class="ov">Last: 1,250.4</span></div>
-        <div class="tach"><b>1,252.0</b><span class="caret"></span></div></div>
+        <div class="tach"><b>1,252.0</b><span class="caret"></span></div>
+        <div style="display:flex;justify-content:center;gap:8px;font-size:13.5px;color:var(--ink2);margin-top:2px"><span>Today, Oct 19</span><span style="color:var(--ink3)">·</span><span>Pilot: Me</span><span style="color:var(--ink3)">·</span><span style="color:var(--accent)">Add Hobbs</span></div></div>
       <div class="pv">${glyph('due_soon')}<div style="flex:1"><div style="font-weight:600;font-size:15.5px">Oil change</div><div style="font-size:13px;color:var(--ink2);margin-top:1px">${oil.hoursRemaining.toFixed(1)} → <b style="color:var(--dueSoon)">${newLeft.toFixed(1)} hrs left</b> · about ${proj}</div></div></div>
       <div class="btn" style="margin-top:14px">Log 1.6 hrs</div>
       <div class="keys">${['1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '0', '⌫'].map((k) => `<span class="${k === '.' || k === '⌫' ? 'f' : ''}">${k}</span>`).join('')}</div>
@@ -411,7 +418,7 @@ const shots = [];
 {
   const rep = rows.filter((r) => r.status !== 'not_applicable');
   const lastDone = { 'ELT battery': 'Exp. Sep 2026', Transponder: 'Oct 18, 2024', 'VOR check': 'Oct 1, 2026', 'Oil change': '1,210.0 tach', 'Pitot-static & altimeter': 'Nov 2, 2024', 'AD 2020-18-04': 'Jan 10, 2026', 'Annual inspection': 'Mar 15, 2026', 'ELT inspection': 'Mar 15, 2026', Registration: 'Exp. Jun 2029' };
-  const dueCol = (r) => { const it = items.find((i) => rowModel(i).name === r.name); return r.unit && r.unit.startsWith('hrs') ? `${it.dueTach.toFixed(1)} tach` : fmt(it.dueDate); };
+  const dueCol = (r) => { const it = items.find((i) => rowModel(i).name === r.name); return r.unit && r.unit.startsWith('hrs') ? `${it.dueTach.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} tach` : fmt(it.dueDate); };
   const inner = `<style>
     .viewer{position:absolute;left:0;right:0;top:98px;bottom:96px;background:var(--canvas);padding:14px 14px 0}
     .paper{background:#fff;color:#0E1621;border-radius:4px;box-shadow:0 2px 10px rgba(16,24,40,.12),0 0 0 1px rgba(16,24,40,.06);padding:20px 18px 14px;height:100%;position:relative;overflow:hidden;
@@ -432,12 +439,16 @@ const shots = [];
     <div class="viewer"><div class="paper">
       <div style="display:flex;justify-content:space-between;align-items:flex-start"><div><h3>Aircraft Status Report</h3><div class="meta">N731TB · Beechcraft A36 · IFR · Tach 1,250.4</div></div>
         <div style="text-align:right" class="meta">Prepared Oct 19, 2026<br>from owner-entered data</div></div>
-      <div class="sumbox">${glyph(SUM_GLYPH[S.status])}<div><b>All tracked items current: No.</b> ELT battery overdue · 3 items due soon</div></div>
+      <div class="sumbox">${glyph(SUM_GLYPH[S.status])}<div><b>All tracked items current: No.</b> ELT battery overdue · 3 due soon</div></div>
       <table class="ptab"><thead><tr><th>Status</th><th>Item</th><th>Last done</th><th>Due</th><th style="text-align:right">Left</th></tr></thead><tbody>
       ${rep.map((r) => `<tr><td>${glyph(r.status)}<span class="w" style="color:${{ overdue: tokens.light.overdue, due_soon: tokens.light.dueSoon, ok: tokens.light.current }[r.status]}">${TAG[r.status]}</span></td>
         <td><b style="font-weight:600">${r.name}</b><div class="c">${r.cite}</div></td><td>${lastDone[r.name] || ''}</td><td>${dueCol(r)}</td>
         <td style="text-align:right;font-weight:600">${r.value}${r.unit && r.unit.startsWith('hrs') ? ' h' : ' d'}${r.unit && r.unit.includes('over') ? ' over' : ''}</td></tr>`).join('')}
       </tbody></table>
+      <div style="font-family:'DejaVu Sans Mono';font-size:6.6px;letter-spacing:.08em;text-transform:uppercase;color:#5B6676;font-weight:600;margin-top:14px;padding-bottom:5px;border-bottom:1.2px solid #0E1621">Open squawks (2)</div>
+      <div style="font-size:8.6px;padding:6px 3px;border-bottom:.8px solid #DCE1E8">Left brake feels soft on taxi <span style="color:#5B6676">· noted Oct 4</span></div>
+      <div style="font-size:8.6px;padding:6px 3px;border-bottom:.8px solid #DCE1E8">Right nav light intermittent <span style="color:#5B6676">· noted Sep 21</span></div>
+      <div style="display:flex;gap:18px;margin-top:22px;font-size:7.5px;color:#5B6676"><div style="flex:2;border-top:.8px solid #0E1621;padding-top:4px">Reviewed by (A&amp;P/IA), certificate no.</div><div style="flex:1;border-top:.8px solid #0E1621;padding-top:4px">Date</div></div>
       <div class="pfoot">${DISCLAIMER} &nbsp;·&nbsp; Page 1 of 1</div>
     </div></div>
     <div class="pad" style="position:absolute;left:0;right:0;bottom:34px;display:flex;gap:10px"><div class="btn2" style="flex:1">${icon('person2')}Send to my IA</div><div class="btn" style="flex:1">${icon('share')}Share PDF</div></div>

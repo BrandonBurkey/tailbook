@@ -4,7 +4,7 @@
 **Kill/pivot rule** (research §5, Q9): deposit conversion under 5% on 60+ delivered Snapshots → pivot or switch to option #2. Full rules are in `06-decision-rules.md`.
 
 **The funnel you are running**
-Forum/club post → landing page + free due-date checker (another engineer is building it) → "Free Airworthiness Snapshot" request → you deliver a FAR-cited PDF + .ics within 48h → Founding Owner offer: $49 refundable deposit, $149/yr for life.
+Forum/club post → landing page + free due-date checker (another engineer is building it) → "Free Airworthiness Snapshot" request → you deliver a FAR-cited PDF + .ics within 48h → Founding Owner offer: $49 refundable deposit, $149/yr for as long as your subscription stays active.
 
 **Numbers that matter** (from research §4.1)
 | Exp | Pass | Fail | When measured |

@@ -96,7 +96,7 @@ Use the email in `03-concierge-snapshot-sop.md` §8. Follow-ups:
 **3.2 (Day +4)**
 > **Subject:** Re: Keep {tail}'s board up to date automatically?
 >
-> Hi {first_name}, following up once. Founding Owner pricing is $149/yr for life (vs $199) for the first 250 aircraft, held with a **fully refundable $49 deposit**: [STRIPE_LINK]
+> Hi {first_name}, following up once. Founding Owner pricing is $149/yr for as long as your subscription stays active (vs $199) for the first 250 aircraft, held with a **fully refundable $49 deposit**: [STRIPE_LINK]
 >
 > If it's not for you, I'd be grateful for one line on why: price, "my shop handles it", "I'm fine with my spreadsheet", privacy, or something else? I'm deciding in mid-December whether to build this, and your answer counts.
 >
@@ -119,7 +119,7 @@ Use the email in `03-concierge-snapshot-sop.md` §8. Follow-ups:
 > Thank you for putting money down on {tail}. That means more to me than you know at this stage.
 >
 > What you've got:
-> - **$149/yr for life** for {tail} (regular $199)
+> - **$149/yr for life** (for as long as the subscription stays active) for {tail} (regular $199)
 > - Your **$49 is credited toward year one** when TailBook ships (delivered through an App Store offer code), or **refunded any time before launch**: just reply "refund".
 > - If we don't ship by **[2027-06-30]**, everyone is refunded automatically.
 > - You'll get the TestFlight beta before anyone else.
@@ -131,7 +131,7 @@ Use the email in `03-concierge-snapshot-sop.md` §8. Follow-ups:
 ## 5. Last call before the decision (Dec 7)
 > **Subject:** I'm deciding on Dec 15 whether to build TailBook
 >
-> Hi {first_name}, an honest update: I'll decide on December 15 whether to build TailBook, based on whether owners like you put down a refundable deposit. If you want it to exist, this is the moment: [STRIPE_LINK] ($49, fully refundable, credited to year one at $149/yr for life).
+> Hi {first_name}, an honest update: I'll decide on December 15 whether to build TailBook, based on whether owners like you put down a refundable deposit. If you want it to exist, this is the moment: [STRIPE_LINK] ($49, fully refundable, credited to year one at $149/yr for as long as your subscription stays active).
 >
 > If not, no hard feelings. Your Snapshot is yours to keep.
 >
@@ -173,7 +173,7 @@ Find the right contact: executive director, membership director, or the magazine
 >
 > Two offers for {club} members, no strings:
 > 1. **A guest article for {newsletter/magazine}:** "The 24-month items owners forget" (~900 words, regulation-cited, reviewed by an A&P/IA). Draft attached; happy to tailor it for {type} owners and to your style guide.
-> 2. **A member discount:** {club} members get Founding Owner pricing (**$149/yr for life**, vs $199), and [optionally: we'd be glad to discuss a revenue share or a sponsorship back to {club}].
+> 2. **A member discount:** {club} members get Founding Owner pricing (**$149/yr for life** (for as long as the subscription stays active), vs $199), and [optionally: we'd be glad to discuss a revenue share or a sponsorship back to {club}].
 >
 > I'm not an A&P and I'm careful about it: TailBook organizes dates owners enter; their A&P/IA and PIC determine airworthiness.
 >

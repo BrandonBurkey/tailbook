@@ -94,7 +94,7 @@ export async function listFiles(root) {
     departments.push({
       id: d.id, name: d.name, folders: d.folders, exists,
       count: files.length, docCount: docs.length,
-      lastModified: files.reduce((m, f) => (f.mtime > m ? f.mtime : m), null),
+      lastModified: files.reduce((m, f) => (m == null || f.mtime > m ? f.mtime : m), null),
       totalSize: files.reduce((s, f) => s + f.size, 0),
       files,
     });

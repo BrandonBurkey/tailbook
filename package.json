@@ -8,7 +8,9 @@
     "test": "node --test \"engine/test/*.test.js\" \"landing/test/*.test.js\"",
     "vectors": "python3 engine/test/make_vectors.py",
     "build:landing": "node scripts/build-landing.mjs",
-    "e2e": "node landing/e2e/run.mjs"
+    "e2e": "node landing/e2e/run.mjs",
+    "hq": "node hq/server.mjs",
+    "test:hq": "node --test \"hq/test/*.test.mjs\""
   },
   "engines": {
     "node": ">=20"

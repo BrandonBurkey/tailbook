@@ -298,6 +298,10 @@ struct RemindersPromptCard: View {
     let isPro: Bool
     let onEnable: () -> Void
 
+    private var buttonTitle: String {
+        return isPro ? "Turn on reminders" : "Turn on reminders (Pro)"
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Label("Get warned before anything lapses", systemImage: "bell.badge")
@@ -306,7 +310,7 @@ struct RemindersPromptCard: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
             Button(action: onEnable) {
-                Label(isPro ? "Turn on reminders" : "Turn on reminders (Pro)", systemImage: isPro ? "bell" : "lock")
+                Label(buttonTitle, systemImage: isPro ? "bell" : "lock")
             }
             .buttonStyle(.borderedProminent)
         }

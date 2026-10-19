@@ -55,7 +55,7 @@ struct ItemDetailView: View {
                     LabeledContent("Last done at", value: "\(Fmt.hours(lastTach)) tach")
                 }
                 if let due = item.dueDate {
-                    LabeledContent(item.status == .overdue ? "Was current through" : "Current through", value: Fmt.date(due))
+                    LabeledContent(dueLabel(for: item), value: Fmt.date(due))
                 }
                 if let days = item.daysRemaining {
                     LabeledContent("Days left", value: days < 0 ? "\(Fmt.days(-days)) overdue" : Fmt.days(days))
@@ -140,6 +140,10 @@ struct ItemDetailView: View {
         } message: {
             Text("Only do this once the work is signed off in your logbook.")
         }
+    }
+
+    private func dueLabel(for item: EvaluatedItem) -> String {
+        return item.status == .overdue ? "Was current through" : "Current through"
     }
 
     @ViewBuilder

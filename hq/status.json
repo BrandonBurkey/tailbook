@@ -1,89 +1,301 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-19T20:40:00Z",
+  "updatedAt": "2026-10-19T20:55:00Z",
   "updatedBy": "lead",
-  "headline": "Research and the validation kit are done, and the web checker is built and tested. The iOS app is being built now. This week is your setup week, so the forum posts can start on Mon Oct 26.",
+  "headline": "Research, the competitor check and the validation kit are done, and the web checker is built and tested. The iOS app is being built now. This week is your setup week, so the forum posts can start on Mon Oct 26.",
   "phases": [
-    { "id": "research", "name": "Research", "status": "done", "when": "Oct 18", "detail": "Market research picked TailBook for Part 91 owners." },
-    { "id": "kit", "name": "Validation kit", "status": "done", "when": "Oct 19", "detail": "Playbook, posts, emails, SOP, decision rules, landing page." },
-    { "id": "ios", "name": "iOS MVP", "status": "active", "when": "In progress", "detail": "SwiftUI app with the 6 core features." },
-    { "id": "setup", "name": "Founder setup", "status": "active", "when": "Oct 19 – 25", "detail": "Your accounts, domain, Stripe, forums." },
-    { "id": "run", "name": "Validation run", "status": "upcoming", "when": "Oct 26 – Dec 13", "detail": "Forum posts, free Snapshots, $49 deposits." },
-    { "id": "decision", "name": "Go / No-go", "status": "upcoming", "when": "Dec 15", "date": "2026-12-15", "detail": "Apply the pre-signed decision rules." },
-    { "id": "launch", "name": "App Store launch", "status": "upcoming", "when": "After a Go", "detail": "Ship v1 to depositors first." }
+    {
+      "id": "research",
+      "name": "Research",
+      "status": "done",
+      "when": "Oct 18",
+      "detail": "Market research picked TailBook; the competitor watch found a crowded market."
+    },
+    {
+      "id": "kit",
+      "name": "Validation kit",
+      "status": "done",
+      "when": "Oct 19",
+      "detail": "Playbook, posts, emails, SOP, decision rules, landing page."
+    },
+    {
+      "id": "ios",
+      "name": "iOS MVP",
+      "status": "active",
+      "when": "In progress",
+      "detail": "SwiftUI app with the 6 core features."
+    },
+    {
+      "id": "setup",
+      "name": "Founder setup",
+      "status": "active",
+      "when": "Oct 19 – 25",
+      "detail": "Your accounts, domain, Stripe, forums."
+    },
+    {
+      "id": "run",
+      "name": "Validation run",
+      "status": "upcoming",
+      "when": "Oct 26 – Dec 13",
+      "detail": "Forum posts, free Snapshots, $49 deposits."
+    },
+    {
+      "id": "decision",
+      "name": "Go / No-go",
+      "status": "upcoming",
+      "when": "Dec 15",
+      "date": "2026-12-15",
+      "detail": "Apply the pre-signed decision rules."
+    },
+    {
+      "id": "launch",
+      "name": "App Store launch",
+      "status": "upcoming",
+      "when": "After a Go",
+      "detail": "Ship v1 to depositors first."
+    }
   ],
   "milestones": [
-    { "id": "m-setup", "date": "2026-10-19", "title": "Setup week starts", "detail": "Accounts, domain, Stripe link, forum profiles." },
-    { "id": "m-post", "date": "2026-10-26", "title": "Forum posting starts", "detail": "Day 1 of the 21-day E1 window." },
-    { "id": "m-e1", "date": "2026-11-15", "title": "E1 check", "detail": "Need 60+ Snapshot requests and 150+ clicks. Under 20 requests means stop and pivot." },
-    { "id": "m-mid", "date": "2026-11-22", "title": "Deposit midpoint check", "detail": "How the $49 deposit rate (E2) is trending." },
-    { "id": "m-freeze", "date": "2026-12-13", "title": "Numbers frozen", "detail": "Last day that counts for the decision." },
-    { "id": "m-decision", "date": "2026-12-15", "title": "Go / No-go decision", "detail": "15%+ deposit rate means build v1. Under 5% means refund and pivot." }
+    {
+      "id": "m-setup",
+      "date": "2026-10-19",
+      "title": "Setup week starts",
+      "detail": "Accounts, domain, Stripe link, forum profiles."
+    },
+    {
+      "id": "m-post",
+      "date": "2026-10-26",
+      "title": "Forum posting starts",
+      "detail": "Day 1 of the 21-day E1 window."
+    },
+    {
+      "id": "m-e1",
+      "date": "2026-11-15",
+      "title": "E1 check",
+      "detail": "Need 60+ Snapshot requests and 150+ clicks. Under 20 requests means stop and pivot."
+    },
+    {
+      "id": "m-mid",
+      "date": "2026-11-22",
+      "title": "Deposit midpoint check",
+      "detail": "How the $49 deposit rate (E2) is trending."
+    },
+    {
+      "id": "m-freeze",
+      "date": "2026-12-13",
+      "title": "Numbers frozen",
+      "detail": "Last day that counts for the decision."
+    },
+    {
+      "id": "m-decision",
+      "date": "2026-12-15",
+      "title": "Go / No-go decision",
+      "detail": "15%+ deposit rate means build v1. Under 5% means refund and pivot."
+    }
   ],
   "teams": [
     {
-      "id": "research", "name": "Research", "role": "Market and competitor research",
-      "status": "done", "folders": ["research"],
-      "task": "Done: market research and the pick. Now running a competitor-watch update.",
-      "next": "Competitor-watch update in progress",
-      "updatedAt": "2026-10-19T20:30:00Z"
+      "id": "research",
+      "name": "Research",
+      "role": "Market and competitor research",
+      "status": "done",
+      "folders": [
+        "research"
+      ],
+      "task": "Done: market research, plus the competitor watch (25+ rival apps found; report in the Library).",
+      "next": "On call for follow-up questions",
+      "updatedAt": "2026-10-19T20:50:00Z"
     },
     {
-      "id": "design", "name": "UI/UX", "role": "Design system and visuals",
-      "status": "working", "folders": ["design"],
+      "id": "design",
+      "name": "UI/UX",
+      "role": "Design system and visuals",
+      "status": "working",
+      "folders": [
+        "design"
+      ],
       "task": "Building the design system, the App Store screenshots and the landing page polish.",
       "next": "Hand off screenshots to Marketing",
       "updatedAt": "2026-10-19T20:35:00Z"
     },
     {
-      "id": "marketing", "name": "Marketing", "role": "Launch content",
-      "status": "working", "folders": ["marketing"],
+      "id": "marketing",
+      "name": "Marketing",
+      "role": "Launch content",
+      "status": "working",
+      "folders": [
+        "marketing"
+      ],
       "task": "Writing the launch content kit.",
       "next": "Content calendar for Oct 26 onward",
       "updatedAt": "2026-10-19T20:35:00Z"
     },
     {
-      "id": "sales", "name": "Sales", "role": "Partners and B2B",
-      "status": "working", "folders": ["sales"],
+      "id": "sales",
+      "name": "Sales",
+      "role": "Partners and B2B",
+      "status": "working",
+      "folders": [
+        "sales"
+      ],
       "task": "Writing the partner and B2B kit (type clubs, flight schools, shops).",
       "next": "Partner one-pager and outreach list",
       "updatedAt": "2026-10-19T20:35:00Z"
     },
     {
-      "id": "ios", "name": "Engineering · iOS", "role": "SwiftUI app",
-      "status": "working", "folders": ["ios"],
+      "id": "ios",
+      "name": "Engineering · iOS",
+      "role": "SwiftUI app",
+      "status": "working",
+      "folders": [
+        "ios"
+      ],
       "task": "Building the SwiftUI MVP: the 6 core features, on top of the ported rules engine.",
       "next": "Status board and tach quick-log screens",
       "updatedAt": "2026-10-19T20:35:00Z"
     },
     {
-      "id": "web", "name": "Engineering · Web", "role": "Landing page and rules engine",
-      "status": "done", "folders": ["landing", "engine"],
+      "id": "web",
+      "name": "Engineering · Web",
+      "role": "Landing page and rules engine",
+      "status": "done",
+      "folders": [
+        "landing",
+        "engine"
+      ],
       "task": "Done: landing page with the free due-date checker, and the rules engine. 119 tests pass.",
       "next": "On call for landing page tweaks",
       "updatedAt": "2026-10-19T18:52:00Z"
     },
     {
-      "id": "growth", "name": "Growth & Validation", "role": "Experiments and playbook",
-      "status": "done", "folders": ["validation"],
+      "id": "growth",
+      "name": "Growth & Validation",
+      "role": "Experiments and playbook",
+      "status": "done",
+      "folders": [
+        "validation"
+      ],
       "task": "Done: the 8-week validation playbook, forum posts, emails, Snapshot SOP and decision rules.",
       "next": "Reads the numbers each week once posting starts",
       "updatedAt": "2026-10-19T18:52:00Z"
     }
   ],
   "todos": [
-    { "id": "llc-name", "title": "Form an LLC and check the TailBook name", "detail": "Search USPTO (TESS) and the App Store for \"TailBook\" before you pay for anything.", "cost": "~$150", "time": "1h", "doc": "validation/00-playbook.md", "done": false },
-    { "id": "domain-email", "title": "Buy the domain and set up email", "detail": "e.g. tailbook.app, plus Google Workspace for a real address.", "cost": "~$31", "time": "30m", "doc": "validation/00-playbook.md", "done": false },
-    { "id": "apple-dev", "title": "Join the Apple Developer Program", "detail": "Enroll as the LLC so the app ships under the company name.", "cost": "$99/yr", "time": "20m", "doc": "validation/07-legal-and-appstore.md", "done": false },
-    { "id": "stripe-tally", "title": "Create the Stripe $49 deposit link and the Tally form", "detail": "Then paste both links into the landing page (send them to the team).", "cost": "Free", "time": "45m", "doc": "validation/00-playbook.md", "done": false },
-    { "id": "ia-advisor", "title": "Recruit an IA advisor to review the rules", "detail": "A paid mechanic with Inspection Authorization checks the engine and the Snapshot template.", "cost": "~$1.5k", "time": "2h outreach", "doc": "validation/03-concierge-snapshot-sop.md", "done": false },
-    { "id": "forums", "title": "Join COPA and MAPA, and warm up your forum profiles", "detail": "Real name, short honest bio. Read 20 threads before you post anything.", "cost": "$95 + ~$65", "time": "2h", "doc": "validation/01-forum-posts.md", "done": false },
-    { "id": "interviews", "title": "Do 2–3 owner interviews", "detail": "Mom Test style: ask about the past, not about the idea.", "cost": "Free", "time": "1h each", "doc": "validation/02-customer-interviews.md", "done": false },
-    { "id": "deploy", "title": "Deploy the landing page", "detail": "Drag landing/index.html onto Netlify Drop, then point the domain at it.", "cost": "Free", "time": "15m", "doc": "landing/index.html", "done": false }
+    {
+      "id": "llc-name",
+      "title": "Form an LLC and check the TailBook name",
+      "detail": "Search USPTO (TESS) and the App Store for \"TailBook\" before you pay for anything.",
+      "cost": "~$150",
+      "time": "1h",
+      "doc": "validation/00-playbook.md",
+      "done": false
+    },
+    {
+      "id": "domain-email",
+      "title": "Buy the domain and set up email",
+      "detail": "e.g. tailbook.app, plus Google Workspace for a real address.",
+      "cost": "~$31",
+      "time": "30m",
+      "doc": "validation/00-playbook.md",
+      "done": false
+    },
+    {
+      "id": "apple-dev",
+      "title": "Join the Apple Developer Program",
+      "detail": "Enroll as the LLC so the app ships under the company name.",
+      "cost": "$99/yr",
+      "time": "20m",
+      "doc": "validation/07-legal-and-appstore.md",
+      "done": false
+    },
+    {
+      "id": "stripe-tally",
+      "title": "Create the Stripe $49 deposit link and the Tally form",
+      "detail": "Then paste both links into the landing page (send them to the team).",
+      "cost": "Free",
+      "time": "45m",
+      "doc": "validation/00-playbook.md",
+      "done": false
+    },
+    {
+      "id": "ia-advisor",
+      "title": "Recruit an IA advisor to review the rules",
+      "detail": "A paid mechanic with Inspection Authorization checks the engine and the Snapshot template.",
+      "cost": "~$1.5k",
+      "time": "2h outreach",
+      "doc": "validation/03-concierge-snapshot-sop.md",
+      "done": false
+    },
+    {
+      "id": "forums",
+      "title": "Join COPA and MAPA, and warm up your forum profiles",
+      "detail": "Real name, short honest bio. Read 20 threads before you post anything.",
+      "cost": "$95 + ~$65",
+      "time": "2h",
+      "doc": "validation/01-forum-posts.md",
+      "done": false
+    },
+    {
+      "id": "interviews",
+      "title": "Do 2–3 owner interviews",
+      "detail": "Mom Test style: ask about the past, not about the idea.",
+      "cost": "Free",
+      "time": "1h each",
+      "doc": "validation/02-customer-interviews.md",
+      "done": false
+    },
+    {
+      "id": "deploy",
+      "title": "Deploy the landing page",
+      "detail": "Drag landing/index.html onto Netlify Drop, then point the domain at it.",
+      "cost": "Free",
+      "time": "15m",
+      "doc": "landing/index.html",
+      "done": false
+    }
   ],
   "decisions": [
-    { "id": "niche-cap", "question": "Is a niche capped at about $1–2M a year OK?", "context": "TailBook serves US Part 91 owners. It can be a very good small business, but probably not a huge one. The bigger alternative (#2, real-estate hours tracking) is a more crowded market.", "recommendation": "Yes for now: validate TailBook first; it is cheap to test.", "doc": "research/market-research.md" },
-    { "id": "budget", "question": "Approve the ~$2,350 validation budget?", "context": "LLC, domain, email, analytics, COPA and MAPA, an IA advisor (~$1,500) and a lawyer review (~$500). Without the advisor and the lawyer it is about $360.", "recommendation": "Approve. The IA advisor is the main trust signal for pilots.", "doc": "validation/00-playbook.md" },
-    { "id": "name", "question": "Keep the name TailBook?", "context": "Only if the USPTO and App Store checks come back clean. Changing the name later costs a new domain and new forum posts.", "recommendation": "Keep it if the checks are clean.", "doc": "research/market-research.md" }
-  ]
+    {
+      "id": "competitors",
+      "question": "Continue with TailBook as-is, adjust pricing, or switch niche?",
+      "context": "25+ rival apps exist (Coflyt, Aircraft Compliance, BetterPlane), most at $0–$140/yr. Revenue estimate is now ~$80k–$500k/yr.",
+      "recommendation": "Adjust pricing: test $129/$149/$199 deposits, launch through one type club, keep the Dec 15 go/no-go.",
+      "doc": "research/competitor-watch.md",
+      "featured": true
+    },
+    {
+      "id": "niche-cap",
+      "question": "Is a small niche OK? (now ~$80k–$500k a year, revised down from ~$1–2M)",
+      "context": "TailBook serves US Part 91 owners. The competitor check cut the revenue estimate, so this is a lifestyle-sized business unless a type-club channel works. The bigger alternative (#2, real-estate hours tracking) is a more crowded market.",
+      "recommendation": "Decide together with the competitor question above.",
+      "doc": "research/market-research.md"
+    },
+    {
+      "id": "budget",
+      "question": "Approve the ~$2,350 validation budget?",
+      "context": "LLC, domain, email, analytics, COPA and MAPA, an IA advisor (~$1,500) and a lawyer review (~$500). Without the advisor and the lawyer it is about $360.",
+      "recommendation": "Approve. The IA advisor is the main trust signal for pilots.",
+      "doc": "validation/00-playbook.md"
+    },
+    {
+      "id": "name",
+      "question": "Keep the name TailBook?",
+      "context": "Only if the USPTO and App Store checks come back clean. Changing the name later costs a new domain and new forum posts.",
+      "recommendation": "Keep it if the checks are clean.",
+      "doc": "research/market-research.md"
+    }
+  ],
+  "headlineDecision": {
+    "id": "competitors",
+    "title": "The competitor check changes the picture",
+    "summary": "The competitor check found 25+ rival apps (Coflyt, Aircraft Compliance, BetterPlane), so the market is crowded rather than empty. Revenue estimate revised to ~$80k–$500k/yr. Recommendation: keep the Dec 15 go/no-go, test $129/$149/$199 deposit prices, and launch through one type club.",
+    "question": "Continue with TailBook as-is, adjust pricing, or switch niche?",
+    "options": [
+      "Continue as-is",
+      "Adjust pricing",
+      "Switch niche"
+    ],
+    "recommendation": "Adjust pricing: keep the Dec 15 go/no-go, test $129/$149/$199 deposits, launch through one type club.",
+    "doc": "research/competitor-watch.md"
+  }
 }

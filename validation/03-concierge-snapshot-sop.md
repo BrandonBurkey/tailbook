@@ -205,7 +205,7 @@ Log the answer to Q1 in the tracker under **E3-proxy** (surprise yes/no).
 > Yesterday's Snapshot was a snapshot. It's correct today and starts going stale the next time you fly. I'm building **TailBook**, an iPhone/iPad app that keeps this board live: log tach in one tap after a flight, get warned at 60/30/7 days, keep your logbook scans searchable and backed up, and share the board with co-owners.
 >
 > **The Founding Owner offer** (first 250 aircraft):
-> - **$149/yr for life** (regular price $199/yr per aircraft)
+> - **$149/yr for life** (for as long as the subscription stays active) (regular price $199/yr per aircraft)
 > - Reserve your spot with a **$49 refundable deposit**: [STRIPE_LINK]
 > - The $49 is **credited toward your first year** when the app ships, or you can get it back any time before then, no questions asked. If we don't ship by **[2027-06-30]**, we refund everyone automatically.
 >
