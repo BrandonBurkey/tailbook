@@ -173,7 +173,7 @@ Find the right contact: executive director, membership director, or the magazine
 >
 > Two offers for {club} members, no strings:
 > 1. **A guest article for {newsletter/magazine}:** "The 24-month items owners forget" (~900 words, regulation-cited, reviewed by an A&P/IA). Draft attached; happy to tailor it for {type} owners and to your style guide.
-> 2. **A member discount:** {club} members get Founding Owner pricing (**$149/yr for life** (for as long as the subscription stays active), vs $199), and [optionally: we'd be glad to discuss a revenue share or a sponsorship back to {club}].
+> 2. **A member discount:** {club} members get Founding Owner pricing (**$149/yr**, vs $199, for as long as the subscription stays active), and [optionally: we'd be glad to discuss a revenue share or a sponsorship back to {club}].
 >
 > I'm not an A&P and I'm careful about it: TailBook organizes dates owners enter; their A&P/IA and PIC determine airworthiness.
 >
