@@ -1,0 +1,16 @@
+{
+  "name": "tailbook",
+  "version": "0.1.0",
+  "private": true,
+  "description": "TailBook: always-airworthy status board for Part 91 aircraft owners. Rules engine + validation landing page.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"engine/test/*.test.js\" \"landing/test/*.test.js\"",
+    "vectors": "python3 engine/test/make_vectors.py",
+    "build:landing": "node scripts/build-landing.mjs",
+    "e2e": "node landing/e2e/run.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
