@@ -1,0 +1,139 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Recurring ADs</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1290px;height:2796px;overflow:hidden}
+body{font-family:"Inter",system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-feature-settings:"cv11","ss01";background:#0A111C;color:#E8EDF3}
+.mono{font-family:"DejaVu Sans Mono",ui-monospace,monospace}
+.num{font-feature-settings:"tnum","cv11"}
+/* ---------- marketing canvas ---------- */
+.stage{position:relative;width:1290px;height:2796px;overflow:hidden;
+  background:radial-gradient(120% 60% at 50% 0%,#14243B 0%,#0C1626 45%,#080E17 100%)}
+.stage::before{content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(140,170,210,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(140,170,210,.06) 1px,transparent 1px);
+  background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 85% 40% at 50% 8%,#000 25%,transparent 80%)}
+.stage::after{content:"";position:absolute;left:50%;top:1250px;width:1500px;height:1500px;transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(90,169,255,.16),transparent 60%);pointer-events:none}
+.copy{position:absolute;left:96px;right:96px;top:128px;z-index:2}
+.eyebrow{display:inline-flex;align-items:center;gap:18px;font-family:"DejaVu Sans Mono",monospace;font-size:30px;letter-spacing:.16em;text-transform:uppercase;color:#8EC3FF}
+.eyebrow i{width:18px;height:18px;border-radius:5px;background:#5AA9FF;box-shadow:0 0 18px rgba(90,169,255,.8)}
+h1{font-family:"Inter Display","Inter",sans-serif;font-weight:700;font-size:104px;line-height:1.04;letter-spacing:-.025em;margin-top:30px;color:#F3F6FA}
+h1 em{font-style:normal;color:#7DBBFF}
+.sub{font-size:42px;line-height:1.32;color:#AEB9C7;margin-top:28px;max-width:1060px;letter-spacing:-.005em}
+.phone-wrap{position:absolute;left:141px;top:668px;width:1008px;height:2112px;z-index:2}
+.phone{width:458px;height:960px;transform:scale(2.2);transform-origin:0 0;border-radius:72px;padding:13px;position:relative;
+  background:linear-gradient(145deg,#4A525C 0%,#262B32 18%,#1A1E23 50%,#2D333B 85%,#5A626D 100%);
+  box-shadow:0 0 0 1.2px #0B0D10 inset,0 0 0 2.4px #6B737D inset,0 40px 80px rgba(0,0,0,.55),0 8px 24px rgba(0,0,0,.4)}
+.phone::before{content:"";position:absolute;left:-2.5px;top:180px;width:3px;height:62px;border-radius:2px;background:#3A4048}
+.phone::after{content:"";position:absolute;right:-2.5px;top:220px;width:3px;height:96px;border-radius:2px;background:#3A4048}
+.screen{position:relative;width:432px;height:934px;border-radius:60px;overflow:hidden;background:var(--canvas);color:var(--ink);
+  box-shadow:0 0 0 3px #000}
+.island{position:absolute;left:50%;top:11px;width:124px;height:36px;margin-left:-62px;background:#000;border-radius:20px;z-index:30}
+.sbar{position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:6px 34px 0 46px;z-index:20;font-weight:600;font-size:16.5px;color:var(--ink)}
+.sbar .r{display:flex;gap:6px;align-items:center}
+.sbar svg{height:12px;width:auto}
+.homebar{position:absolute;bottom:8px;left:50%;width:140px;height:5px;margin-left:-70px;border-radius:3px;background:var(--ink);opacity:.9;z-index:40}
+.light{--canvas:#F2F4F7;--surface:#FFFFFF;--surface2:#F7F8FA;--ink:#0E1621;--ink2:#384455;--ink3:#5B6676;--line:#DCE1E8;--line2:#C5CDD8;--accent:#1F5FD1;--accentPressed:#174AA6;--onAccent:#FFFFFF;--accentSoft:#E8EFFB;--overdue:#A3142A;--overdueFill:#B4152B;--overdueBg:#FDECEA;--dueSoon:#8A5300;--dueSoonFill:#B97700;--dueSoonBg:#FFF3D6;--current:#0B6A52;--currentFill:#129070;--currentBg:#E1F4EE;--neutral:#5B6676;--neutralFill:#7D8898;--neutralBg:#EEF1F4;--knock:#FFFFFF}
+.dark{--canvas:#090D12;--surface:#121922;--surface2:#18212C;--ink:#E8EDF3;--ink2:#B7C1CD;--ink3:#8E99A8;--line:#243040;--line2:#334155;--accent:#5AA9FF;--accentPressed:#86C0FF;--onAccent:#06121F;--accentSoft:#132A45;--overdue:#FF8A80;--overdueFill:#FF5A4F;--overdueBg:#3A1A1C;--dueSoon:#FFC266;--dueSoonFill:#FFB224;--dueSoonBg:#36290F;--current:#6BE3BC;--currentFill:#4BE0B0;--currentBg:#0D2E26;--neutral:#9AA5B3;--neutralFill:#6B7686;--neutralBg:#1C242F;--knock:#121922}
+/* ---------- app UI (points) ---------- */
+.app{position:absolute;inset:0;padding-top:54px;font-size:17px;line-height:1.3}
+.ic{width:22px;height:22px;display:block}
+.g{display:inline-flex;width:22px;height:22px;flex:none}
+.g svg{width:100%;height:100%}
+.st-overdue{color:var(--overdueFill)} .st-due_soon{color:var(--dueSoonFill)} .st-ok{color:var(--currentFill)}
+.st-unknown,.st-not_applicable{color:var(--neutralFill)}
+.nav{display:flex;align-items:flex-end;justify-content:space-between;padding:6px 16px 10px}
+.nav .t{font-family:"DejaVu Sans Mono",monospace;font-weight:700;font-size:28px;letter-spacing:-.01em;display:flex;align-items:center;gap:6px}
+.nav .t .ic{width:18px;height:18px;color:var(--ink3);margin-top:4px}
+.nav .s{font-size:13px;color:var(--ink3);margin-top:2px}
+.nav .btns{display:flex;gap:10px}
+.cbtn{width:36px;height:36px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;color:var(--accent)}
+.cbtn .ic{width:19px;height:19px}
+.pad{padding:0 16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.light .card.hero{box-shadow:0 4px 14px rgba(16,24,40,.05)}
+.ov{font-family:"DejaVu Sans Mono",monospace;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+.hero-main{display:flex;gap:14px;padding:16px 16px 14px}
+.hero-main .g{width:44px;height:44px}
+.answer{font-family:"Inter Display","Inter";font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.05;margin-top:3px}
+.headline{font-size:14.5px;color:var(--ink2);margin-top:5px;line-height:1.35}
+.strip{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;background:var(--surface2);border-top:1px solid var(--line)}
+.strip .v{font-size:15px;font-weight:600;margin-top:2px}
+.counts{display:flex;gap:10px;font-size:15px;color:var(--ink2);font-weight:500}
+.counts span{display:inline-flex;align-items:center;gap:4px}
+.counts .g{width:15px;height:15px}
+.disc{font-size:11.5px;line-height:1.4;color:var(--ink3);padding:9px 16px 11px;border-top:1px solid var(--line)}
+.sech{font-family:"DejaVu Sans Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);padding:16px 20px 7px}
+.row{display:flex;gap:12px;padding:11px 16px;align-items:flex-start;position:relative}
+.row+.row::before{content:"";position:absolute;top:0;left:50px;right:0;height:1px;background:var(--line)}
+.row .g{margin-top:1px}
+.row .lb{flex:1;min-width:0}
+.row .nm{font-weight:600;font-size:16.5px;letter-spacing:-.01em}
+.row .ct{font-family:"DejaVu Sans Mono",monospace;font-size:11px;color:var(--ink3);margin-top:2px}
+.row .dt{font-size:13.5px;color:var(--ink2);margin-top:3px}
+.row .vb{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.row .vl{font-size:20px;font-weight:650;font-feature-settings:"tnum";line-height:1.1;letter-spacing:-.01em}
+.row .un{font-family:"DejaVu Sans Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)}
+.tag{font-family:"DejaVu Sans Mono",monospace;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 5px;border-radius:5px;margin-top:3px;white-space:nowrap}
+.tag.st-overdue{color:var(--overdue);background:var(--overdueBg)} .tag.st-due_soon{color:var(--dueSoon);background:var(--dueSoonBg)}
+.tag.st-ok{color:var(--current);background:var(--currentBg)} .tag.st-not_applicable,.tag.st-unknown{color:var(--neutral);background:var(--neutralBg)}
+.vl.st-overdue{color:var(--overdue)} .vl.st-due_soon{color:var(--dueSoon)} .vl.st-ok{color:var(--ink)}
+.na .nm{color:var(--ink3)}
+.tabbar{position:absolute;left:0;right:0;bottom:0;height:86px;display:flex;justify-content:space-around;padding:8px 6px 0;
+  background:color-mix(in srgb,var(--surface) 94%,transparent);border-top:1px solid var(--line);z-index:15}
+.tab{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:500;color:var(--ink3);width:72px}
+.tab .ic{width:25px;height:25px}
+.tab.on{color:var(--accent)}
+.fab{position:absolute;right:16px;bottom:100px;height:52px;padding:0 20px 0 16px;border-radius:26px;background:var(--accent);color:var(--onAccent);
+  display:flex;align-items:center;gap:8px;font-weight:600;font-size:16.5px;box-shadow:0 8px 24px rgba(31,95,209,.35);z-index:16}
+.fab .ic{width:20px;height:20px}
+.btn{height:52px;border-radius:12px;background:var(--accent);color:var(--onAccent);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:17px}
+.btn2{height:50px;border-radius:12px;background:var(--surface);border:1px solid var(--line2);color:var(--accent);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:16px}
+.navbar{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 10px;font-size:17px}
+.navbar .back{display:flex;align-items:center;gap:2px;color:var(--accent)}
+.navbar .back .ic{width:24px;height:24px}
+.navbar .mid{font-weight:600}
+.navbar .act{color:var(--accent);display:flex;gap:16px;padding-right:6px}
+.kv{display:flex;justify-content:space-between;align-items:baseline;padding:11px 16px;font-size:15.5px;position:relative}
+.kv+.kv::before{content:"";position:absolute;top:0;left:16px;right:0;height:1px;background:var(--line)}
+.kv .k{color:var(--ink2)} .kv .v{font-weight:600;font-feature-settings:"tnum"}
+.note{display:flex;gap:10px;font-size:13.5px;line-height:1.4;color:var(--ink2);padding:12px 14px;background:var(--accentSoft);border-radius:12px}
+.note .ic{width:18px;height:18px;color:var(--accent);flex:none;margin-top:1px}
+</style></head>
+<body><div class="stage"><div class="copy"><div class="eyebrow"><i></i>Recurring ADs</div><h1>Hours or months,<br><em>whichever comes first.</em></h1><p class="sub">TailBook watches both clocks and projects the hours side from how much you fly.</p></div><div class="phone-wrap"><div class="phone"><div class="screen light"><div class="island"></div><div class="sbar"><span>9:41</span><span class="r">
+  <svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor"/><rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor"/><rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor"/></svg>
+  <svg viewBox="0 0 16 12"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0zM3.4 6.8a6.5 6.5 0 0 1 9.2 0l-1.4 1.4a4.5 4.5 0 0 0-6.4 0zM1 4.4a9.9 9.9 0 0 1 14 0l-1.4 1.4a7.9 7.9 0 0 0-11.2 0z" fill="currentColor"/></svg>
+  <svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="23" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".45"/><rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/><path d="M25 4v4a2 2 0 0 0 0-4z" fill="currentColor" opacity=".5"/></svg>
+</span></div><style>
+    .clock{padding:16px;position:relative}
+    .clock+.clock{border-top:1px solid var(--line)}
+    .clock .hd{display:flex;align-items:center;gap:8px;color:var(--ink2);font-size:14px;font-weight:600}
+    .clock .hd .ic{width:18px;height:18px;color:var(--ink3)}
+    .clock .big{display:flex;align-items:baseline;gap:8px;margin-top:6px}
+    .clock .big b{font-family:'Inter Display';font-size:34px;font-weight:700;letter-spacing:-.02em;font-feature-settings:"tnum"}
+    .bar{height:8px;border-radius:4px;background:var(--neutralBg);margin-top:10px;overflow:hidden}
+    .bar i{display:block;height:100%;border-radius:4px;background:var(--currentFill)}
+    .gov{position:absolute;right:16px;top:16px;font-family:'DejaVu Sans Mono';font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accentSoft);padding:3px 6px;border-radius:5px}
+  </style><div class="app">
+    <div class="navbar"><span class="back"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>ADs</span><span class="mid"></span><span class="act">Edit</span></div>
+    <div class="pad"><div style="display:flex;align-items:center;gap:10px"><span class="g st-ok"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10.5" fill="currentColor"/><path d="M7.2 12.4l3.2 3.2 6.4-6.8" fill="none" stroke="var(--knock)" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="tag st-ok" style="font-size:11px;margin:0">Current</span></div>
+      <div class="mono" style="font-size:27px;font-weight:700;margin-top:10px;letter-spacing:-.01em">AD 2020-18-04</div>
+      <div style="font-size:15px;color:var(--ink2);margin-top:4px">Recurring inspection · every 100 hrs or 12 calendar months, whichever comes first</div></div>
+    <div class="sech">Two clocks</div>
+    <div class="pad"><div class="card">
+      <div class="clock"><span class="gov">Comes first</span><div class="hd"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/></svg>Calendar</div>
+        <div class="big"><b>104</b><span class="ov" style="font-size:12px">days left</span></div>
+        <div style="font-size:14px;color:var(--ink2)">Due by <b style="color:var(--ink)">Jan 31, 2027</b></div>
+        <div class="bar"><i style="width:73%"></i></div></div>
+      <div class="clock"><div class="hd"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.6 17.5a8.5 8.5 0 1 1 14.8 0"/><path d="m12 13 3.5-4.5"/><circle cx="12" cy="13.2" r="1.3"/></svg>Tach hours</div>
+        <div class="big"><b>39.6</b><span class="ov" style="font-size:12px">hrs left</span></div>
+        <div style="font-size:14px;color:var(--ink2)">Due at <b style="color:var(--ink)">1,290.0</b> tach · about Mar 18, 2027 at your pace</div>
+        <div class="bar"><i style="width:60%"></i></div></div>
+    </div></div>
+    <div class="sech">Compliance</div>
+    <div class="pad"><div class="card">
+      <div class="kv"><span class="k">Last done</span><span class="v">Jan 10, 2026 · 1,190.0</span></div>
+      <div class="kv"><span class="k">Method</span><span class="v">Inspection per AD ¶(g)</span></div>
+      <div class="kv"><span class="k">Logbook</span><span class="v" style="color:var(--accent)">Airframe p. 31 ›</span></div>
+    </div></div>
+    <div class="pad" style="margin-top:14px"><div class="note"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".5"/></svg><span>TailBook tracks the ADs you add. Your IA determines which ADs apply to your aircraft.</span></div></div>
+    <div class="tabbar"><div class="tab "><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="3.5"/><path d="M7.5 8.5h1.5M7.5 12h1.5M7.5 15.5h1.5M11.5 8.5h5M11.5 12h5M11.5 15.5h5"/></svg><span>Board</span></div><div class="tab on"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.3 7.5 9.5 4.3-1.2 7.5-4.9 7.5-9.5V6z"/><path d="M12 8.5v4.5"/><circle cx="12" cy="16" r=".4"/></svg><span>ADs</span></div><div class="tab "><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4.5" width="14" height="17" rx="2.5"/><path d="M9 4.5V3.8a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v.7M8.5 10h1M8.5 13.5h1M8.5 17h1M12 10h3.5M12 13.5h3.5M12 17h3.5"/></svg><span>Squawks</span></div><div class="tab "><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5.5A1.5 1.5 0 0 1 5.5 4H8M16 4h2.5A1.5 1.5 0 0 1 20 5.5V8M20 16v2.5a1.5 1.5 0 0 1-1.5 1.5H16M8 20H5.5A1.5 1.5 0 0 1 4 18.5V16"/><path d="M8 9h8M8 12h8M8 15h5"/></svg><span>Logbooks</span></div><div class="tab "><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg><span>Reports</span></div></div>
+  </div><div class="homebar"></div></div></div></div></div></body></html>

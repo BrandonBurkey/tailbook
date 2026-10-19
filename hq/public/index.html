@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>TailBook HQ</title>
+  <meta name="description" content="Founder dashboard for the TailBook venture: teams, milestones, your to-dos and validation metrics.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#F4F3EF" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0C0E11" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/theme.js"></script>
+  <link rel="stylesheet" href="/app.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#/overview" aria-label="TailBook HQ, overview">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M6.5 18.5h11l-2.6-4.6h-3.1L9.2 5.5H6.9l1.6 8.4H6.5z" fill="currentColor"/></svg>
+        </span>
+        <span class="brand-name">TailBook <span>HQ</span></span>
+      </a>
+      <nav class="tabs" aria-label="Sections" id="tabs"></nav>
+      <div class="topbar-right">
+        <span class="live" id="live" title="Refreshes every 30 seconds"><span class="live-dot"></span><span id="live-text">Live</span></span>
+        <button class="icon-btn" id="theme-btn" type="button" aria-label="Switch theme"></button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <div class="loading" id="boot"><span class="spinner"></span>Loading HQ…</div>
+  </main>
+
+  <nav class="bottombar" aria-label="Sections" id="bottombar"></nav>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
