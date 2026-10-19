@@ -1,0 +1,3219 @@
+{
+  "schema": 1,
+  "engineVersion": "1.0.0",
+  "generatedBy": "engine/test/make_vectors.py",
+  "description": "Golden test vectors for the TailBook due-date engine. Every implementation (JS, Swift) must produce these values. Only the fields listed under expect are compared; omitted fields are not constrained. Dates are civil dates (YYYY-MM-DD); hours are tach hours to 0.1.",
+  "conventions": {
+    "calendarMonths": "Due through the last day of the Nth month after the month done.",
+    "days": "Done on D with an N-day interval: last current day is D+N.",
+    "plainMonths": "Same day-of-month N months later, clamped to the month's last day.",
+    "dueSoon": "<= 30 days or <= 10.0 hours remaining; 0 remaining is still current.",
+    "projection": "floor(hoursRemaining / (avgHoursPerMonth / (365.25/12))) days after asOf.",
+    "summaryOrder": "overdue (scope all) > incomplete > limited (ifr/hire/transponder only) > current. The summary reports whether entered items are current; it is never an airworthiness determination.",
+    "itemOrder": "annual, hundredHour, pitotStatic, transponder, eltInspection, eltBattery, vorCheck, registration, oilChange, ads[], customItems[]. affects[] and attention[] follow this order; nextDue ties go to the earlier item."
+  },
+  "dateCases": [
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2026-03-01",
+        12
+      ],
+      "expect": "2027-03-31"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2026-03-31",
+        12
+      ],
+      "expect": "2027-03-31"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2026-01-31",
+        1
+      ],
+      "expect": "2026-02-28"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2027-01-31",
+        1
+      ],
+      "expect": "2027-02-28"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2028-01-15",
+        1
+      ],
+      "expect": "2028-02-29"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2024-02-29",
+        12
+      ],
+      "expect": "2025-02-28"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2024-02-29",
+        24
+      ],
+      "expect": "2026-02-28"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2024-02-29",
+        48
+      ],
+      "expect": "2028-02-29"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2025-12-15",
+        12
+      ],
+      "expect": "2026-12-31"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2025-11-30",
+        2
+      ],
+      "expect": "2026-01-31"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2023-02-10",
+        84
+      ],
+      "expect": "2030-02-28"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "2099-02-01",
+        12
+      ],
+      "expect": "2100-02-28"
+    },
+    {
+      "fn": "endOfCalendarMonths",
+      "args": [
+        "1999-02-01",
+        12
+      ],
+      "expect": "2000-02-29"
+    },
+    {
+      "fn": "addMonthsClamped",
+      "args": [
+        "2026-01-31",
+        1
+      ],
+      "expect": "2026-02-28"
+    },
+    {
+      "fn": "addMonthsClamped",
+      "args": [
+        "2028-01-31",
+        1
+      ],
+      "expect": "2028-02-29"
+    },
+    {
+      "fn": "addMonthsClamped",
+      "args": [
+        "2026-03-31",
+        1
+      ],
+      "expect": "2026-04-30"
+    },
+    {
+      "fn": "addMonthsClamped",
+      "args": [
+        "2026-06-19",
+        4
+      ],
+      "expect": "2026-10-19"
+    },
+    {
+      "fn": "addMonthsClamped",
+      "args": [
+        "2026-10-31",
+        -6
+      ],
+      "expect": "2026-04-30"
+    },
+    {
+      "fn": "addDays",
+      "args": [
+        "2026-09-19",
+        30
+      ],
+      "expect": "2026-10-19"
+    },
+    {
+      "fn": "addDays",
+      "args": [
+        "2028-02-28",
+        1
+      ],
+      "expect": "2028-02-29"
+    },
+    {
+      "fn": "addDays",
+      "args": [
+        "2026-12-31",
+        1
+      ],
+      "expect": "2027-01-01"
+    },
+    {
+      "fn": "daysBetween",
+      "args": [
+        "2026-10-19",
+        "2027-03-31"
+      ],
+      "expect": 163
+    },
+    {
+      "fn": "daysBetween",
+      "args": [
+        "2027-04-01",
+        "2027-03-31"
+      ],
+      "expect": -1
+    },
+    {
+      "fn": "daysBetween",
+      "args": [
+        "2028-02-01",
+        "2028-03-01"
+      ],
+      "expect": 29
+    },
+    {
+      "fn": "normalizeDate",
+      "args": [
+        "2027-03"
+      ],
+      "expect": "2027-03-31"
+    },
+    {
+      "fn": "normalizeDate",
+      "args": [
+        "2028-02"
+      ],
+      "expect": "2028-02-29"
+    }
+  ],
+  "cases": [
+    {
+      "id": "base-healthy-vfr",
+      "description": "Complete healthy VFR private aircraft: everything green, IFR/hire items N/A.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "ok",
+            "dueDate": "2027-03-31",
+            "daysRemaining": 163
+          },
+          "transponder": {
+            "status": "ok",
+            "dueDate": "2027-05-31",
+            "daysRemaining": 224
+          },
+          "eltInspection": {
+            "status": "ok",
+            "dueDate": "2027-03-31",
+            "daysRemaining": 163
+          },
+          "eltBattery": {
+            "status": "ok",
+            "dueDate": "2028-01-31",
+            "daysRemaining": 469
+          },
+          "registration": {
+            "status": "ok",
+            "dueDate": "2029-06-30",
+            "daysRemaining": 985
+          },
+          "pitotStatic": {
+            "status": "not_applicable"
+          },
+          "vorCheck": {
+            "status": "not_applicable"
+          },
+          "hundredHour": {
+            "status": "not_applicable"
+          }
+        },
+        "summary": {
+          "status": "current",
+          "allCurrent": true,
+          "nextDue": {
+            "id": "annual",
+            "date": "2027-03-31",
+            "daysRemaining": 163
+          }
+        }
+      }
+    },
+    {
+      "id": "annual-first-of-month",
+      "description": "Annual done on the 1st of March: good through 31 March next year.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-01"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "ok",
+            "dueDate": "2027-03-31",
+            "daysRemaining": 163
+          }
+        }
+      }
+    },
+    {
+      "id": "annual-last-of-month",
+      "description": "Annual done on 31 March: same due date as one done 1 March.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-31"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "ok",
+            "dueDate": "2027-03-31",
+            "daysRemaining": 163
+          }
+        }
+      }
+    },
+    {
+      "id": "annual-jan31",
+      "description": "Annual done 31 January 2026: due through 31 January 2027.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-01-31"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "ok",
+            "dueDate": "2027-01-31",
+            "daysRemaining": 104
+          }
+        }
+      }
+    },
+    {
+      "id": "annual-year-rollover",
+      "description": "Annual done mid-December: due 31 December the next year.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2025-12-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "ok",
+            "dueDate": "2026-12-31",
+            "daysRemaining": 73
+          }
+        }
+      }
+    },
+    {
+      "id": "annual-due-soon",
+      "description": "Annual done 5 October 2025: due 31 Oct 2026, 12 days left => yellow.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2025-10-05"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "due_soon",
+            "dueDate": "2026-10-31",
+            "daysRemaining": 12
+          }
+        },
+        "summary": {
+          "status": "current",
+          "allCurrent": true
+        }
+      }
+    },
+    {
+      "id": "annual-31-days-is-green",
+      "description": "Exactly 31 days left is green; 30 is the yellow threshold.",
+      "profile": {
+        "asOf": "2026-02-28",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2025-03-10"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "ok",
+            "dueDate": "2026-03-31",
+            "daysRemaining": 31
+          }
+        }
+      }
+    },
+    {
+      "id": "annual-30-days-is-yellow",
+      "description": "Exactly 30 days left is yellow.",
+      "profile": {
+        "asOf": "2026-03-01",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2025-03-10"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "due_soon",
+            "dueDate": "2026-03-31",
+            "daysRemaining": 30
+          }
+        }
+      }
+    },
+    {
+      "id": "annual-last-legal-day",
+      "description": "On the last day of the 12th calendar month the annual is still current (0 days, yellow).",
+      "profile": {
+        "asOf": "2027-03-31",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-10-01"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "due_soon",
+            "dueDate": "2027-03-31",
+            "daysRemaining": 0
+          }
+        },
+        "summary": {
+          "status": "current",
+          "allCurrent": true
+        }
+      }
+    },
+    {
+      "id": "annual-day-after-expiry",
+      "description": "The day after the 12th calendar month ends the annual is overdue.",
+      "profile": {
+        "asOf": "2027-04-01",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-10-01"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "overdue",
+            "dueDate": "2027-03-31",
+            "daysRemaining": -1
+          }
+        },
+        "summary": {
+          "status": "overdue",
+          "allCurrent": false
+        }
+      }
+    },
+    {
+      "id": "annual-feb29-done",
+      "description": "Annual done 29 Feb 2024 (leap day): due 28 Feb 2025, last legal day.",
+      "profile": {
+        "asOf": "2025-02-28",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2024-02-29"
+        },
+        "transponder": {
+          "lastDone": "2024-06-01"
+        },
+        "eltInspection": {
+          "lastDone": "2024-06-01"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "due_soon",
+            "dueDate": "2025-02-28",
+            "daysRemaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "annual-feb29-day-after",
+      "description": "Annual done 29 Feb 2024: overdue on 1 March 2025.",
+      "profile": {
+        "asOf": "2025-03-01",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2024-02-29"
+        },
+        "transponder": {
+          "lastDone": "2024-06-01"
+        },
+        "eltInspection": {
+          "lastDone": "2024-06-01"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "overdue",
+            "dueDate": "2025-02-28",
+            "daysRemaining": -1
+          }
+        },
+        "summary": {
+          "status": "overdue",
+          "allCurrent": false
+        }
+      }
+    },
+    {
+      "id": "annual-due-on-leap-day",
+      "description": "Annual done Feb 2027: due through 29 Feb 2028 (leap year).",
+      "profile": {
+        "asOf": "2027-06-01",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2027-02-10"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2027-02-10"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "ok",
+            "dueDate": "2028-02-29",
+            "daysRemaining": 273
+          }
+        }
+      }
+    },
+    {
+      "id": "annual-century-non-leap",
+      "description": "Annual done Feb 2099: due 28 Feb 2100 (2100 is not a leap year).",
+      "profile": {
+        "asOf": "2099-06-01",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2099-02-15"
+        },
+        "transponder": {
+          "lastDone": "2099-02-15"
+        },
+        "eltInspection": {
+          "lastDone": "2099-02-15"
+        },
+        "eltBattery": {
+          "expires": "2101-01"
+        },
+        "registration": {
+          "expires": "2105-01-31"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "ok",
+            "dueDate": "2100-02-28",
+            "daysRemaining": 272
+          }
+        }
+      }
+    },
+    {
+      "id": "annual-missing",
+      "description": "No annual entered: item unknown and summary incomplete.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "unknown"
+          }
+        },
+        "summary": {
+          "status": "incomplete",
+          "allCurrent": null
+        }
+      }
+    },
+    {
+      "id": "annual-future-date",
+      "description": "An annual dated after today is rejected as unknown.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-11-02"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "unknown"
+          }
+        },
+        "summary": {
+          "status": "incomplete",
+          "allCurrent": null
+        }
+      }
+    },
+    {
+      "id": "pitot-not-ifr",
+      "description": "VFR-only aircraft: pitot-static N/A even with an old date entered.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "pitotStatic": {
+          "lastDone": "2019-01-01"
+        }
+      },
+      "expect": {
+        "items": {
+          "pitotStatic": {
+            "status": "not_applicable"
+          }
+        },
+        "summary": {
+          "status": "current",
+          "allCurrent": true
+        }
+      }
+    },
+    {
+      "id": "pitot-ifr-due-soon",
+      "description": "IFR: pitot-static done 2 Oct 2024 is due 31 Oct 2026 (24 calendar months).",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": true,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "pitotStatic": {
+          "lastDone": "2024-10-02"
+        },
+        "vorCheck": {
+          "lastDone": "2026-10-10"
+        }
+      },
+      "expect": {
+        "items": {
+          "pitotStatic": {
+            "status": "due_soon",
+            "dueDate": "2026-10-31",
+            "daysRemaining": 12
+          }
+        }
+      }
+    },
+    {
+      "id": "pitot-ifr-overdue-limited",
+      "description": "IFR: pitot-static overdue: summary limited (IFR only), not overdue.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": true,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "pitotStatic": {
+          "lastDone": "2024-09-30"
+        },
+        "vorCheck": {
+          "lastDone": "2026-10-10"
+        }
+      },
+      "expect": {
+        "items": {
+          "pitotStatic": {
+            "status": "overdue",
+            "dueDate": "2026-09-30",
+            "daysRemaining": -19
+          }
+        },
+        "summary": {
+          "status": "limited",
+          "allCurrent": false,
+          "affects": [
+            "IFR operations"
+          ]
+        }
+      }
+    },
+    {
+      "id": "pitot-jan31-24mo",
+      "description": "Pitot-static done 31 Jan 2025: due 31 Jan 2027.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": true,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "pitotStatic": {
+          "lastDone": "2025-01-31"
+        },
+        "vorCheck": {
+          "lastDone": "2026-10-10"
+        }
+      },
+      "expect": {
+        "items": {
+          "pitotStatic": {
+            "status": "ok",
+            "dueDate": "2027-01-31",
+            "daysRemaining": 104
+          }
+        }
+      }
+    },
+    {
+      "id": "pitot-ifr-missing",
+      "description": "IFR aircraft without a pitot-static date: unknown, but only IFR is at stake so summary is current.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": true,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "vorCheck": {
+          "lastDone": "2026-10-10"
+        }
+      },
+      "expect": {
+        "items": {
+          "pitotStatic": {
+            "status": "unknown"
+          }
+        },
+        "summary": {
+          "status": "current",
+          "allCurrent": true
+        }
+      }
+    },
+    {
+      "id": "xpdr-feb29-24mo",
+      "description": "Transponder done 29 Feb 2024: due 28 Feb 2026; on that day 0 days left.",
+      "profile": {
+        "asOf": "2026-02-28",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2025-06-01"
+        },
+        "transponder": {
+          "lastDone": "2024-02-29"
+        },
+        "eltInspection": {
+          "lastDone": "2025-06-01"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "transponder": {
+            "status": "due_soon",
+            "dueDate": "2026-02-28",
+            "daysRemaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "xpdr-overdue-limited",
+      "description": "Transponder overdue: summary limited (transponder use).",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2024-08-20"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "transponder": {
+            "status": "overdue",
+            "dueDate": "2026-08-31",
+            "daysRemaining": -49
+          }
+        },
+        "summary": {
+          "status": "limited",
+          "allCurrent": false
+        }
+      }
+    },
+    {
+      "id": "xpdr-none-installed",
+      "description": "No transponder installed: N/A.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10,
+          "hasTransponder": false
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "transponder": {
+            "status": "not_applicable"
+          }
+        },
+        "summary": {
+          "status": "current",
+          "allCurrent": true
+        }
+      }
+    },
+    {
+      "id": "elt-insp-due-end-of-month",
+      "description": "ELT inspection done 31 Oct 2025: due 31 Oct 2026 (12 calendar months).",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2025-10-31"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "eltInspection": {
+            "status": "due_soon",
+            "dueDate": "2026-10-31",
+            "daysRemaining": 12
+          }
+        }
+      }
+    },
+    {
+      "id": "elt-insp-overdue",
+      "description": "ELT inspection overdue: summary overdue.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2025-09-01"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "eltInspection": {
+            "status": "overdue",
+            "dueDate": "2026-09-30",
+            "daysRemaining": -19
+          }
+        },
+        "summary": {
+          "status": "overdue",
+          "allCurrent": false
+        }
+      }
+    },
+    {
+      "id": "elt-batt-month-only",
+      "description": "Battery date entered as month only (2027-03) means through 31 March 2027.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2027-03"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "eltBattery": {
+            "status": "ok",
+            "dueDate": "2027-03-31",
+            "daysRemaining": 163
+          }
+        }
+      }
+    },
+    {
+      "id": "elt-batt-day-after",
+      "description": "Battery date was yesterday: overdue.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2026-10-18"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "eltBattery": {
+            "status": "overdue",
+            "dueDate": "2026-10-18",
+            "daysRemaining": -1
+          }
+        },
+        "summary": {
+          "status": "overdue",
+          "allCurrent": false
+        }
+      }
+    },
+    {
+      "id": "elt-batt-30-days",
+      "description": "Battery replacement date exactly 30 days out: yellow.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2026-11-18"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "eltBattery": {
+            "status": "due_soon",
+            "dueDate": "2026-11-18",
+            "daysRemaining": 30
+          }
+        }
+      }
+    },
+    {
+      "id": "elt-batt-31-days",
+      "description": "Battery replacement date 31 days out: green.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2026-11-19"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "eltBattery": {
+            "status": "ok",
+            "dueDate": "2026-11-19",
+            "daysRemaining": 31
+          }
+        }
+      }
+    },
+    {
+      "id": "elt-batt-cumulative-use",
+      "description": "Transmitter used 1.2 cumulative hours: battery overdue regardless of date.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01",
+          "cumulativeUseHours": 1.2
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "eltBattery": {
+            "status": "overdue"
+          }
+        },
+        "summary": {
+          "status": "overdue",
+          "allCurrent": false
+        }
+      }
+    },
+    {
+      "id": "elt-batt-exactly-one-hour",
+      "description": "Exactly 1.0 cumulative hour is not 'more than 1': still governed by date.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01",
+          "cumulativeUseHours": 1.0
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "eltBattery": {
+            "status": "ok",
+            "dueDate": "2028-01-31",
+            "daysRemaining": 469
+          }
+        }
+      }
+    },
+    {
+      "id": "elt-none-required",
+      "description": "Owner indicates no ELT required: inspection and battery N/A.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10,
+          "hasElt": false
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        }
+      },
+      "expect": {
+        "items": {
+          "eltInspection": {
+            "status": "not_applicable"
+          },
+          "eltBattery": {
+            "status": "not_applicable"
+          }
+        },
+        "summary": {
+          "status": "current",
+          "allCurrent": true
+        }
+      }
+    },
+    {
+      "id": "vor-not-ifr",
+      "description": "VFR aircraft: VOR check N/A.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "vorCheck": {
+          "lastDone": "2020-01-01"
+        }
+      },
+      "expect": {
+        "items": {
+          "vorCheck": {
+            "status": "not_applicable"
+          }
+        }
+      }
+    },
+    {
+      "id": "vor-day-30",
+      "description": "VOR checked 19 Sep: still within the preceding 30 days on 19 Oct (last day).",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": true,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "pitotStatic": {
+          "lastDone": "2025-06-01"
+        },
+        "vorCheck": {
+          "lastDone": "2026-09-19"
+        }
+      },
+      "expect": {
+        "items": {
+          "vorCheck": {
+            "status": "due_soon",
+            "dueDate": "2026-10-19",
+            "daysRemaining": 0
+          }
+        },
+        "summary": {
+          "status": "current",
+          "allCurrent": true
+        }
+      }
+    },
+    {
+      "id": "vor-day-31",
+      "description": "VOR checked 18 Sep: lapsed on 19 Oct; summary limited (IFR).",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": true,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "pitotStatic": {
+          "lastDone": "2025-06-01"
+        },
+        "vorCheck": {
+          "lastDone": "2026-09-18"
+        }
+      },
+      "expect": {
+        "items": {
+          "vorCheck": {
+            "status": "overdue",
+            "dueDate": "2026-10-18",
+            "daysRemaining": -1
+          }
+        },
+        "summary": {
+          "status": "limited",
+          "allCurrent": false,
+          "affects": [
+            "IFR operations"
+          ]
+        }
+      }
+    },
+    {
+      "id": "vor-gps-only",
+      "description": "IFR aircraft that does not use VOR for IFR navigation: N/A.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": true,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10,
+          "usesVor": false
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "pitotStatic": {
+          "lastDone": "2025-06-01"
+        }
+      },
+      "expect": {
+        "items": {
+          "vorCheck": {
+            "status": "not_applicable"
+          }
+        }
+      }
+    },
+    {
+      "id": "reg-from-issue",
+      "description": "Registration issued 10 Feb 2023 expires 28 Feb 2030 (7 years after last day of issue month).",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "issued": "2023-02-10"
+        }
+      },
+      "expect": {
+        "items": {
+          "registration": {
+            "status": "ok",
+            "dueDate": "2030-02-28",
+            "daysRemaining": 1228
+          }
+        }
+      }
+    },
+    {
+      "id": "reg-issued-leap-day",
+      "description": "Issued 29 Feb 2024: expires 28 Feb 2031.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "issued": "2024-02-29"
+        }
+      },
+      "expect": {
+        "items": {
+          "registration": {
+            "status": "ok",
+            "dueDate": "2031-02-28",
+            "daysRemaining": 1593
+          }
+        }
+      }
+    },
+    {
+      "id": "reg-legacy-extended",
+      "description": "Issued Jan 2020 (3-year cert still valid on 23 Jan 2023) is extended to 31 Jan 2027.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "issued": "2020-01-15"
+        }
+      },
+      "expect": {
+        "items": {
+          "registration": {
+            "status": "ok",
+            "dueDate": "2027-01-31",
+            "daysRemaining": 104
+          }
+        }
+      }
+    },
+    {
+      "id": "reg-expired",
+      "description": "Registration expired 1 Oct 2026: summary overdue.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2026-10-01"
+        }
+      },
+      "expect": {
+        "items": {
+          "registration": {
+            "status": "overdue",
+            "dueDate": "2026-10-01",
+            "daysRemaining": -18
+          }
+        },
+        "summary": {
+          "status": "overdue",
+          "allCurrent": false
+        }
+      }
+    },
+    {
+      "id": "reg-missing",
+      "description": "No registration entered: incomplete.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        }
+      },
+      "expect": {
+        "items": {
+          "registration": {
+            "status": "unknown"
+          }
+        },
+        "summary": {
+          "status": "incomplete"
+        }
+      }
+    },
+    {
+      "id": "100h-not-for-hire",
+      "description": "Private use: 100-hour N/A even with tach entered.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 900
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "not_applicable"
+          }
+        }
+      }
+    },
+    {
+      "id": "100h-ok",
+      "description": "For hire: last 100-hr at 1200.0, tach 1250.0 => due 1300.0, 50 hrs left.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": true,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1200
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "ok",
+            "dueTach": 1300,
+            "hoursRemaining": 50,
+            "projectedDate": "2027-03-20"
+          }
+        }
+      }
+    },
+    {
+      "id": "100h-10-left",
+      "description": "Exactly 10.0 hrs left is yellow.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": true,
+          "currentTach": 1290,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1200
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "due_soon",
+            "dueTach": 1300,
+            "hoursRemaining": 10
+          }
+        }
+      }
+    },
+    {
+      "id": "100h-10.1-left",
+      "description": "10.1 hrs left is green (floating-point safe).",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": true,
+          "currentTach": 1289.9,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1200
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "ok",
+            "dueTach": 1300,
+            "hoursRemaining": 10.1
+          }
+        }
+      }
+    },
+    {
+      "id": "100h-at-limit",
+      "description": "At exactly the due tach: 0 hrs left, still current (yellow).",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": true,
+          "currentTach": 1300,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1200
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "due_soon",
+            "hoursRemaining": 0
+          }
+        },
+        "summary": {
+          "status": "current"
+        }
+      }
+    },
+    {
+      "id": "100h-in-overfly",
+      "description": "5.5 hrs over: overdue (for-hire operations), 4.5 hrs of ferry allowance left; summary limited.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": true,
+          "currentTach": 1305.5,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1200
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "overdue",
+            "hoursRemaining": -5.5,
+            "overflyHoursRemaining": 4.5
+          }
+        },
+        "summary": {
+          "status": "limited",
+          "allCurrent": false,
+          "affects": [
+            "For-hire operations"
+          ]
+        }
+      }
+    },
+    {
+      "id": "100h-beyond-overfly",
+      "description": "11 hrs over: beyond the 10-hr allowance.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": true,
+          "currentTach": 1311,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1200
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "overdue",
+            "hoursRemaining": -11,
+            "overflyHoursRemaining": 0
+          }
+        }
+      }
+    },
+    {
+      "id": "100h-overfly-carried",
+      "description": "Last done at 1306 against a 1300 limit: the 6 hrs count, so next due 1400 not 1406.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": true,
+          "currentTach": 1350,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1306,
+          "previousDueTach": 1300
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "ok",
+            "dueTach": 1400,
+            "hoursRemaining": 50
+          }
+        }
+      }
+    },
+    {
+      "id": "100h-overfly-carried-yellow",
+      "description": "Carried excess makes it yellow sooner: due 1400, tach 1392 => 8 left.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": true,
+          "currentTach": 1392,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1306,
+          "previousDueTach": 1300
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "due_soon",
+            "dueTach": 1400,
+            "hoursRemaining": 8
+          }
+        }
+      }
+    },
+    {
+      "id": "100h-done-early",
+      "description": "Done early at 1290 (limit 1300): no credit, next due 1390.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": true,
+          "currentTach": 1350,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1290,
+          "previousDueTach": 1300
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "ok",
+            "dueTach": 1390,
+            "hoursRemaining": 40
+          }
+        }
+      }
+    },
+    {
+      "id": "100h-annual-resets",
+      "description": "An annual at tach 1320 (later than the 100-hr at 1290) satisfies §91.409(b): due 1420.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": true,
+          "currentTach": 1350,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15",
+          "tach": 1320
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1290
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "ok",
+            "dueTach": 1420,
+            "hoursRemaining": 70
+          }
+        }
+      }
+    },
+    {
+      "id": "100h-no-current-tach",
+      "description": "For hire without current tach: unknown.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": true,
+          "currentTach": null,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1200
+        }
+      },
+      "expect": {
+        "items": {
+          "hundredHour": {
+            "status": "unknown"
+          }
+        }
+      }
+    },
+    {
+      "id": "oil-hours-projected",
+      "description": "Oil every 50 hrs: last 1210, tach 1250 => 10 left (yellow), projected from 10 hrs/month.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "oilChange": {
+          "lastDoneTach": 1210,
+          "intervalHours": 50
+        }
+      },
+      "expect": {
+        "items": {
+          "oilChange": {
+            "status": "due_soon",
+            "dueTach": 1260,
+            "hoursRemaining": 10,
+            "projectedDate": "2026-11-18",
+            "effectiveDate": "2026-11-18",
+            "governedBy": "hours"
+          }
+        },
+        "summary": {
+          "status": "current",
+          "nextDue": {
+            "id": "oilChange",
+            "date": "2026-11-18",
+            "daysRemaining": 30
+          }
+        }
+      }
+    },
+    {
+      "id": "oil-whichever-first-calendar",
+      "description": "Oil 50 hrs or 4 months: 4 months from 19 Jun is today; calendar governs.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "oilChange": {
+          "lastDoneTach": 1240,
+          "lastDoneDate": "2026-06-19",
+          "intervalHours": 50,
+          "intervalMonths": 4
+        }
+      },
+      "expect": {
+        "items": {
+          "oilChange": {
+            "status": "due_soon",
+            "dueDate": "2026-10-19",
+            "daysRemaining": 0,
+            "dueTach": 1290,
+            "hoursRemaining": 40,
+            "governedBy": "date",
+            "effectiveDate": "2026-10-19"
+          }
+        }
+      }
+    },
+    {
+      "id": "oil-overdue-advisory",
+      "description": "Oil overdue by hours is flagged but does not change the summary.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "oilChange": {
+          "lastDoneTach": 1190,
+          "intervalHours": 50
+        }
+      },
+      "expect": {
+        "items": {
+          "oilChange": {
+            "status": "overdue",
+            "hoursRemaining": -10
+          }
+        },
+        "summary": {
+          "status": "current",
+          "allCurrent": true,
+          "attention": [
+            "oilChange"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ad-hours-overdue",
+      "description": "Recurring 100-hr AD last done at 1140, tach 1250: overdue, summary overdue.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "ads": [
+          {
+            "adNumber": "2011-10-09",
+            "intervalHours": 100,
+            "lastDoneTach": 1140
+          }
+        ]
+      },
+      "expect": {
+        "items": {
+          "ad:2011-10-09": {
+            "status": "overdue",
+            "dueTach": 1240,
+            "hoursRemaining": -10
+          }
+        },
+        "summary": {
+          "status": "overdue",
+          "allCurrent": false
+        }
+      }
+    },
+    {
+      "id": "ad-whichever-first-hours",
+      "description": "AD 100 hrs or 12 calendar months: hours come first (5 left) => yellow, governed by hours.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1245,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "ads": [
+          {
+            "adNumber": "2020-18-04",
+            "intervalHours": 100,
+            "intervalCalendarMonths": 12,
+            "lastDoneTach": 1150,
+            "lastDoneDate": "2026-01-10"
+          }
+        ]
+      },
+      "expect": {
+        "items": {
+          "ad:2020-18-04": {
+            "status": "due_soon",
+            "dueTach": 1250,
+            "hoursRemaining": 5,
+            "dueDate": "2027-01-31",
+            "daysRemaining": 104,
+            "governedBy": "hours",
+            "effectiveDate": "2026-11-03"
+          }
+        }
+      }
+    },
+    {
+      "id": "ad-whichever-first-calendar",
+      "description": "AD 500 hrs or 12 calendar months: calendar lapsed 31 Aug 2026 though hours remain.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "ads": [
+          {
+            "adNumber": "2019-05-12",
+            "intervalHours": 500,
+            "intervalCalendarMonths": 12,
+            "lastDoneTach": 1150,
+            "lastDoneDate": "2025-08-15"
+          }
+        ]
+      },
+      "expect": {
+        "items": {
+          "ad:2019-05-12": {
+            "status": "overdue",
+            "dueDate": "2026-08-31",
+            "dueTach": 1650,
+            "governedBy": "date"
+          }
+        },
+        "summary": {
+          "status": "overdue"
+        }
+      }
+    },
+    {
+      "id": "ad-plain-months-anniversary",
+      "description": "AD every 1 month (plain months) from 31 Jan: due 28 Feb (anniversary, clamped).",
+      "profile": {
+        "asOf": "2026-02-15",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2025-06-01"
+        },
+        "transponder": {
+          "lastDone": "2025-06-01"
+        },
+        "eltInspection": {
+          "lastDone": "2025-06-01"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "ads": [
+          {
+            "adNumber": "2024-01-01",
+            "intervalMonths": 1,
+            "lastDoneDate": "2026-01-31"
+          }
+        ]
+      },
+      "expect": {
+        "items": {
+          "ad:2024-01-01": {
+            "status": "due_soon",
+            "dueDate": "2026-02-28",
+            "daysRemaining": 13
+          }
+        }
+      }
+    },
+    {
+      "id": "ad-days-interval",
+      "description": "AD every 90 days from 1 Aug 2026: due 30 Oct 2026.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "ads": [
+          {
+            "adNumber": "2025-07-07",
+            "intervalDays": 90,
+            "lastDoneDate": "2026-08-01"
+          }
+        ]
+      },
+      "expect": {
+        "items": {
+          "ad:2025-07-07": {
+            "status": "due_soon",
+            "dueDate": "2026-10-30",
+            "daysRemaining": 11
+          }
+        }
+      }
+    },
+    {
+      "id": "ad-one-time-complied",
+      "description": "One-time AD complied with: OK.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "ads": [
+          {
+            "adNumber": "2018-08-01",
+            "recurring": false,
+            "complied": true,
+            "lastDoneDate": "2019-04-02"
+          }
+        ]
+      },
+      "expect": {
+        "items": {
+          "ad:2018-08-01": {
+            "status": "ok"
+          }
+        },
+        "summary": {
+          "status": "current"
+        }
+      }
+    },
+    {
+      "id": "ad-one-time-explicit-due",
+      "description": "One-time AD not yet done, compliance required by 1 Nov 2026.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "ads": [
+          {
+            "adNumber": "2026-12-03",
+            "recurring": false,
+            "dueDate": "2026-11-01"
+          }
+        ]
+      },
+      "expect": {
+        "items": {
+          "ad:2026-12-03": {
+            "status": "due_soon",
+            "dueDate": "2026-11-01",
+            "daysRemaining": 13
+          }
+        }
+      }
+    },
+    {
+      "id": "ad-not-applicable",
+      "description": "AD marked not applicable by the IA: N/A.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "ads": [
+          {
+            "adNumber": "2010-01-01",
+            "applicable": false
+          }
+        ]
+      },
+      "expect": {
+        "items": {
+          "ad:2010-01-01": {
+            "status": "not_applicable"
+          }
+        },
+        "summary": {
+          "status": "current"
+        }
+      }
+    },
+    {
+      "id": "ad-whichever-first-missing-tach",
+      "description": "Whichever-first AD with the hours side missing cannot be called OK.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "ads": [
+          {
+            "adNumber": "2022-02-02",
+            "intervalHours": 100,
+            "intervalCalendarMonths": 12,
+            "lastDoneDate": "2026-05-01"
+          }
+        ]
+      },
+      "expect": {
+        "items": {
+          "ad:2022-02-02": {
+            "status": "unknown",
+            "dueDate": "2027-05-31"
+          }
+        },
+        "summary": {
+          "status": "incomplete"
+        }
+      }
+    },
+    {
+      "id": "custom-advisory-overdue",
+      "description": "Owner custom item (6 calendar months) overdue: attention only.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "customItems": [
+          {
+            "id": "fire-ext",
+            "name": "Fire extinguisher check",
+            "intervalCalendarMonths": 6,
+            "lastDoneDate": "2026-03-20"
+          }
+        ]
+      },
+      "expect": {
+        "items": {
+          "custom:fire-ext": {
+            "status": "overdue",
+            "dueDate": "2026-09-30",
+            "daysRemaining": -19
+          }
+        },
+        "summary": {
+          "status": "current",
+          "attention": [
+            "custom:fire-ext"
+          ]
+        }
+      }
+    },
+    {
+      "id": "custom-regulatory-overdue",
+      "description": "Custom item flagged regulatory (e.g. an STC ICA limit) overdue: summary overdue.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": false,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "customItems": [
+          {
+            "id": "caps",
+            "name": "CAPS repack",
+            "regulatory": true,
+            "intervalCalendarMonths": 120,
+            "lastDoneDate": "2016-09-01"
+          }
+        ]
+      },
+      "expect": {
+        "items": {
+          "custom:caps": {
+            "status": "overdue",
+            "dueDate": "2026-09-30",
+            "daysRemaining": -19
+          }
+        },
+        "summary": {
+          "status": "overdue"
+        }
+      }
+    },
+    {
+      "id": "summary-multi-limited",
+      "description": "IFR + hire with pitot-static and 100-hr overdue: summary limited, affects two.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": true,
+          "forHire": true,
+          "currentTach": 1302,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "pitotStatic": {
+          "lastDone": "2024-08-01"
+        },
+        "vorCheck": {
+          "lastDone": "2026-10-10"
+        },
+        "hundredHour": {
+          "lastDoneTach": 1200
+        }
+      },
+      "expect": {
+        "items": {
+          "pitotStatic": {
+            "status": "overdue"
+          },
+          "hundredHour": {
+            "status": "overdue"
+          }
+        },
+        "summary": {
+          "status": "limited",
+          "allCurrent": false,
+          "affects": [
+            "For-hire operations",
+            "IFR operations"
+          ]
+        }
+      }
+    },
+    {
+      "id": "summary-every-flight-item-wins",
+      "description": "Annual overdue plus IFR item overdue: summary overdue.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": true,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2025-09-01"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "pitotStatic": {
+          "lastDone": "2024-08-01"
+        },
+        "vorCheck": {
+          "lastDone": "2026-10-10"
+        }
+      },
+      "expect": {
+        "items": {
+          "annual": {
+            "status": "overdue",
+            "dueDate": "2026-09-30",
+            "daysRemaining": -19
+          }
+        },
+        "summary": {
+          "status": "overdue",
+          "allCurrent": false
+        }
+      }
+    },
+    {
+      "id": "summary-next-due",
+      "description": "IFR aircraft: next due is the VOR check in 6 days.",
+      "profile": {
+        "asOf": "2026-10-19",
+        "aircraft": {
+          "ifr": true,
+          "forHire": false,
+          "currentTach": 1250.0,
+          "avgHoursPerMonth": 10
+        },
+        "annual": {
+          "lastDone": "2026-03-15"
+        },
+        "transponder": {
+          "lastDone": "2025-05-10"
+        },
+        "eltInspection": {
+          "lastDone": "2026-03-15"
+        },
+        "eltBattery": {
+          "expires": "2028-01"
+        },
+        "registration": {
+          "expires": "2029-06-30"
+        },
+        "pitotStatic": {
+          "lastDone": "2025-06-01"
+        },
+        "vorCheck": {
+          "lastDone": "2026-09-25"
+        }
+      },
+      "expect": {
+        "items": {
+          "vorCheck": {
+            "status": "due_soon",
+            "dueDate": "2026-10-25",
+            "daysRemaining": 6
+          }
+        },
+        "summary": {
+          "status": "current",
+          "nextDue": {
+            "id": "vorCheck",
+            "date": "2026-10-25",
+            "daysRemaining": 6
+          }
+        }
+      }
+    }
+  ]
+}
