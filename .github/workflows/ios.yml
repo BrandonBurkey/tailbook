@@ -50,7 +50,7 @@ jobs:
       - name: Pick an iPhone simulator
         id: sim
         run: |
-          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          UDID=$(xcrun simctl list -j devices available | python3 -c '
           import json, sys
           devices = json.load(sys.stdin)["devices"]
           runtimes = sorted((k for k in devices if ".iOS-" in k), reverse=True)
