@@ -1,0 +1,86 @@
+name: iOS
+
+on:
+  push:
+    paths:
+      - "ios/**"
+      - "engine/test-vectors.json"
+      - ".github/workflows/ios.yml"
+  pull_request:
+    paths:
+      - "ios/**"
+      - "engine/test-vectors.json"
+      - ".github/workflows/ios.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Engine (swift test) + app (xcodebuild build test)
+    runs-on: macos-15
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: ios
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Golden vectors are in sync with the JS engine
+        run: |
+          cmp ../engine/test-vectors.json Packages/TailBookEngine/Tests/TailBookEngineTests/Resources/test-vectors.json \
+            || { echo "::error::Run ios/scripts/sync-vectors.sh: the Swift copy of test-vectors.json is stale"; exit 1; }
+
+      - name: Engine package tests (golden vectors)
+        run: swift test --package-path Packages/TailBookEngine
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Pick an iPhone simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          runtimes = sorted((k for k in devices if ".iOS-" in k), reverse=True)
+          for runtime in runtimes:
+              for d in devices[runtime]:
+                  if d["name"].startswith("iPhone"):
+                      print(d["udid"]); sys.exit(0)
+          sys.exit("no iPhone simulator found")
+          ')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          echo "Using simulator $UDID"
+
+      - name: Build and test (app + TailBookTests incl. golden vectors)
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project TailBook.xcodeproj \
+            -scheme TailBook \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -configuration Debug \
+            -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            build test | tee build.log
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults
+          path: |
+            ios/TestResults.xcresult
+            ios/build.log
+          if-no-files-found: ignore
