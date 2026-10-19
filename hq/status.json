@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-19T21:00:43.170Z",
+  "updatedAt": "2026-10-19T21:19:32.072Z",
   "updatedBy": "lead",
   "headline": "Research, the competitor check and the validation kit are done, and the web checker is built and tested. The iOS app is being built now. This week is your setup week, so the forum posts can start on Mon Oct 26.",
   "phases": [
@@ -21,7 +21,7 @@
     {
       "id": "ios",
       "name": "iOS MVP",
-      "status": "active",
+      "status": "done",
       "when": "In progress",
       "detail": "SwiftUI app with the 6 core features."
     },
@@ -110,13 +110,13 @@
       "id": "design",
       "name": "UI/UX",
       "role": "Design system and visuals",
-      "status": "done",
+      "status": "working",
       "folders": [
         "design"
       ],
-      "task": "Design system, 6 App Store screenshots, landing polish. Next: review iOS screens once built.",
+      "task": "Reviewing the iOS screens and matching App Store screenshots to the real app",
       "next": "Review the iOS screens and match App Store screenshots to the real app",
-      "updatedAt": "2026-10-19T21:00:43.170Z"
+      "updatedAt": "2026-10-19T21:19:32.072Z"
     },
     {
       "id": "marketing",
@@ -146,13 +146,13 @@
       "id": "ios",
       "name": "Engineering · iOS",
       "role": "SwiftUI app",
-      "status": "working",
+      "status": "done",
       "folders": [
         "ios"
       ],
-      "task": "Building the SwiftUI MVP: the 6 core features, on top of the ported rules engine.",
-      "next": "Status board and tach quick-log screens",
-      "updatedAt": "2026-10-19T20:35:00Z"
+      "task": "SwiftUI MVP built: 6 core features. It compiles and passes all tests on GitHub macOS CI, golden vectors included.",
+      "next": "UI/UX review pass, then founder runs it on a Mac",
+      "updatedAt": "2026-10-19T21:19:32.072Z"
     },
     {
       "id": "web",
