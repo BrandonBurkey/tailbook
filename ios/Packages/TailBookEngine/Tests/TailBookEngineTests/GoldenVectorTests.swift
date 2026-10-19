@@ -14,7 +14,8 @@ final class GoldenVectorTests: XCTestCase {
         for c in cases {
             let fn = c["fn"] as? String ?? "?"
             let args = c["args"] as? [Any] ?? []
-            let label = "\(fn)(\(args.map { "\($0)" }.joined(separator: ", ")))"
+            let argText = args.map { String(describing: $0) }.joined(separator: ", ")
+            let label = fn + "(" + argText + ")"
             let expected = c["expect"]
             switch fn {
             case "endOfCalendarMonths", "addMonthsClamped", "addDays":
