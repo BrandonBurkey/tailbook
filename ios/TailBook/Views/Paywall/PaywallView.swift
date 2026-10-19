@@ -73,6 +73,12 @@ struct PaywallMarketingView: View {
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
 
+            HStack(spacing: 16) {
+                Link("Terms of Use", destination: AppConfig.termsURL)
+                Link("Privacy Policy", destination: AppConfig.privacyURL)
+            }
+            .font(.footnote)
+
             Text(Legal.shortDisclaimer)
                 .font(.caption2)
                 .foregroundStyle(.secondary)
