@@ -224,11 +224,13 @@
 
     return `${featuredDecision()}${hero}${phases}
       <div class="overview-grid">
-        ${todosCard()}
+        <div class="stack">
+          ${todosCard()}
+          ${milestonesCard()}
+        </div>
         <div class="stack">
           ${decisionsCard()}
           ${teamPulseCard()}
-          ${milestonesCard()}
         </div>
       </div>`;
   }

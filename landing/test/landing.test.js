@@ -32,6 +32,12 @@ test('analytics hooks fire the experiment events', () => {
 
 test('no airworthiness verdict wording; summary is "All items current?"', () => {
   assert.ok(!/airworthy today/i.test(html), '"Airworthy today" must not appear');
+  // Page copy only: the inlined engine's source comments are not user-facing.
+  const page = html.replace(/\/\* ---- Inlined from engine[\s\S]*?end of inlined engine ---- \*\//, '');
+  assert.ok(page.length < html.length, 'engine bundle markers found');
+  assert.ok(!/always-airworthy/i.test(page), '"Always-Airworthy" must not appear');
+  assert.ok(!/(is|plane is) legal\b|legal to fly/i.test(page), 'no "is legal" / "legal to fly" claims');
+  assert.match(html, /\$149\/yr for life[^<]*(<\/span>)?<small>\(as long as your subscription stays active\)/);
   assert.match(html, /All items current\?/);
 });
 

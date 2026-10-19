@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TailBook: All items current?</title>
+<title>TailBook: The Always-Ahead Owner System</title>
 <meta name="description" content="Free Airworthiness Due-Date Checker for Part 91 aircraft owners. Annual, transponder, pitot-static, ELT and 100-hour status in seconds, each with its FAR citation.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f2f4f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#090d12" media="(prefers-color-scheme: dark)">
-<meta property="og:title" content="TailBook: every inspection due date on one board">
+<meta property="og:title" content="TailBook: know what's due on your airplane in 5 seconds">
 <meta property="og:description" content="Free Airworthiness Due-Date Checker. Red/yellow/green board with FAR citations and calendar reminders.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2310161e'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%235aa9ff' stroke-width='2.5'/%3E%3Cpath d='M6 17h20' stroke='%232fbf71' stroke-width='2.5'/%3E%3C/svg%3E">
@@ -122,6 +122,9 @@ section { scroll-margin-top: 72px; }
 .btn-ghost:hover { border-color: var(--ink-3); background: var(--panel); }
 .btn[disabled] { opacity: .5; cursor: not-allowed; }
 .btn-block { width: 100%; }
+.btn-2line { flex-direction: column; gap: 2px; padding-top: 10px; padding-bottom: 10px; }
+.btn-2line small { font-size: 13px; font-weight: 500; color: var(--ink-2); }
+.h2-qual { display: block; font-size: .5em; font-weight: 550; letter-spacing: 0; color: var(--ink-2); margin-top: .35em; }
 
 /* ===================================================================
    Header
@@ -215,7 +218,7 @@ section { scroll-margin-top: 72px; }
 @media (min-width: 720px) { .form { padding: 22px 22px 24px; } }
 .form h3 { font-size: 19px; font-weight: 680; }
 .form .hint { color: var(--ink-3); font-size: 15px; margin-top: 4px; }
-.fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 12px; margin-top: 18px; }
+.fgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 12px; margin-top: 18px; align-items: end; }
 .f { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .f.full { grid-column: 1 / -1; }
 @media (max-width: 479px) { .f:not(.keep) { grid-column: 1 / -1; } }
@@ -344,6 +347,7 @@ input::placeholder { color: var(--ink-3); opacity: 1; }
 .price .now { font-size: 46px; font-weight: 760; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
 .price .now small { font-size: 18px; font-weight: 600; color: var(--ink-2); letter-spacing: 0; }
 .price .was { color: var(--ink-3); text-decoration: line-through; font-size: 17px; }
+.price .life-qual { flex-basis: 100%; font-size: 14px; color: var(--ink-2); margin-top: -6px; }
 .price .life { font-weight: 650; color: var(--green); font-size: 16px; }
 .checks { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
 .checks li { display: grid; grid-template-columns: 20px 1fr; gap: 10px; font-size: 15px; color: var(--ink-2); }
@@ -419,11 +423,11 @@ footer .row-f { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: 
     <div class="wrap">
       <div>
         <div class="eyebrow">For Part 91 aircraft owners</div>
-        <h1>Every due date on one board.<span class="dim">Know if all items are current in 5 seconds.</span></h1>
+        <h1>The Always-Ahead Owner System<span class="dim">Know what's due on your airplane in 5 seconds.</span></h1>
         <p class="lede">Every inspection, check and recurring AD on one red-yellow-green board, each with its FAR citation and the calendar-month math done right. Built for owners who would rather fly than reconcile a spreadsheet.</p>
         <div class="hero-ctas">
           <a class="btn btn-primary" href="#checker">Check my airplane, free</a>
-          <a class="btn btn-ghost" href="#pricing" data-founding-link>Founding Owner: $149/yr for life</a>
+          <a class="btn btn-ghost btn-2line" href="#pricing" data-founding-link><span>Founding Owner: $149/yr for life</span><small>(as long as your subscription stays active)</small></a>
         </div>
         <div class="hero-proof">
           <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>No account needed</span>
@@ -596,7 +600,7 @@ footer .row-f { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: 
   <section class="sec sec-alt" id="pricing">
     <div class="wrap">
       <div class="eyebrow">Founding Owners</div>
-      <h2>The first 250 aircraft lock in $149/yr for life.</h2>
+      <h2>The first 250 aircraft lock in $149/yr for life <span class="h2-qual">(as long as your subscription stays active)</span>.</h2>
       <p class="intro">TailBook for iPhone and iPad is in development. Founding Owners shape the app with us and keep the founding price for as long as their subscription stays active.</p>
 
       <div class="price-grid">
@@ -604,7 +608,7 @@ footer .row-f { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: 
           <div class="panel founding">
             <span class="badge"><span class="lamp green" aria-hidden="true" style="width:14px;height:14px"></span>Limited to 250 aircraft</span>
             <h3>Founding Owner</h3>
-            <div class="price"><span class="now">$149<small>/yr</small></span><span class="was">$199/yr</span><span class="life">for life</span></div>
+            <div class="price"><span class="now">$149<small>/yr</small></span><span class="was">$199/yr</span><span class="life">for life</span><span class="life-qual">(as long as your subscription stays active)</span></div>
             <ul class="checks">
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Hold your seat with a <strong>$49 refundable deposit</strong>, credited via an App Store offer code at launch, or fully refunded.</span></li>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Per aircraft, with unlimited co-owners at no extra cost.</span></li>
